@@ -1,0 +1,7 @@
+class TestCase::Compress::Raw::Zlib {
+  use Compress::Raw::Zlib;
+  static method test : int () {
+    
+    return 1;
+  }
+}
