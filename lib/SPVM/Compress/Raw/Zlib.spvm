@@ -3,4 +3,6 @@
 
 class Compress::Raw::Zlib {
   version "0.001";
+  
+  use Resource::Zlib;
 }
