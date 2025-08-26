@@ -4,3 +4,60 @@
 class Compress::Raw::Zlib::InflateScanStream {
   version_from Compress::Raw::Zlib;
 }
+
+__END__
+
+sub Compress::Raw::Zlib::inflateScanStream::createDeflateStream
+{
+    my $pkg = shift ;
+    my ($got) = ParseParameters(0,
+            {
+                'AppendOutput'  => [1, 1, Parse_boolean,  0],
+                'CRC32'         => [1, 1, Parse_boolean,  0],
+                'ADLER32'       => [1, 1, Parse_boolean,  0],
+                'Bufsize'       => [1, 1, Parse_unsigned, 4096],
+
+                'Level'         => [1, 1, Parse_signed,   Z_DEFAULT_COMPRESSION()],
+                'Method'        => [1, 1, Parse_unsigned, Z_DEFLATED()],
+                'WindowBits'    => [1, 1, Parse_signed,   - MAX_WBITS()],
+                'MemLevel'      => [1, 1, Parse_unsigned, MAX_MEM_LEVEL()],
+                'Strategy'      => [1, 1, Parse_unsigned, Z_DEFAULT_STRATEGY()],
+            }, @_) ;
+
+    croak "Compress::Raw::Zlib::InflateScan::createDeflateStream: Bufsize must be >= 1, you specified " .
+            $got->value('Bufsize')
+        unless $got->value('Bufsize') >= 1;
+
+    my $flags = 0 ;
+    $flags |= FLAG_APPEND if $got->value('AppendOutput') ;
+    $flags |= FLAG_CRC    if $got->value('CRC32') ;
+    $flags |= FLAG_ADLER  if $got->value('ADLER32') ;
+
+    $pkg->_createDeflateStream($flags,
+                $got->value('Level'),
+                $got->value('Method'),
+                $got->value('WindowBits'),
+                $got->value('MemLevel'),
+                $got->value('Strategy'),
+                $got->value('Bufsize'),
+                ) ;
+
+}
+
+sub Compress::Raw::Zlib::inflateScanStream::inflate
+{
+    my $self = shift ;
+    my $buffer = $_[1];
+    my $eof = $_[2];
+
+    my $status = $self->scan(@_);
+
+    if ($status == Z_OK() && $_[2]) {
+        my $byte = ' ';
+
+        $status = $self->scan(\$byte, $_[1]) ;
+    }
+
+    return $status ;
+}
+

@@ -5,4 +5,182 @@ class Compress::Raw::Zlib {
   version "0.001";
   
   use Resource::Zlib;
+
 }
+
+__END__
+
+package Compress::Raw::Zlib;
+
+require 5.006 ;
+require Exporter;
+use Carp ;
+
+use strict ;
+use warnings ;
+use bytes ;
+our ($VERSION, $XS_VERSION, @ISA, @EXPORT, %EXPORT_TAGS, @EXPORT_OK, $AUTOLOAD, %DEFLATE_CONSTANTS, @DEFLATE_CONSTANTS);
+
+$VERSION = '2.213';
+$XS_VERSION = $VERSION;
+$VERSION = eval $VERSION;
+
+@ISA = qw(Exporter);
+%EXPORT_TAGS = ( flush     => [qw{
+                                    Z_NO_FLUSH
+                                    Z_PARTIAL_FLUSH
+                                    Z_SYNC_FLUSH
+                                    Z_FULL_FLUSH
+                                    Z_FINISH
+                                    Z_BLOCK
+                              }],
+                 level     => [qw{
+                                    Z_NO_COMPRESSION
+                                    Z_BEST_SPEED
+                                    Z_BEST_COMPRESSION
+                                    Z_DEFAULT_COMPRESSION
+                              }],
+                 strategy  => [qw{
+                                    Z_FILTERED
+                                    Z_HUFFMAN_ONLY
+                                    Z_RLE
+                                    Z_FIXED
+                                    Z_DEFAULT_STRATEGY
+                              }],
+                 status   => [qw{
+                                    Z_OK
+                                    Z_STREAM_END
+                                    Z_NEED_DICT
+                                    Z_ERRNO
+                                    Z_STREAM_ERROR
+                                    Z_DATA_ERROR
+                                    Z_MEM_ERROR
+                                    Z_BUF_ERROR
+                                    Z_VERSION_ERROR
+                              }],
+              );
+
+%DEFLATE_CONSTANTS = %EXPORT_TAGS;
+
+# Items to export into callers namespace by default. Note: do not export
+# names by default without a very good reason. Use EXPORT_OK instead.
+# Do not simply export all your public functions/methods/constants.
+@DEFLATE_CONSTANTS =
+@EXPORT = qw(
+        ZLIB_VERSION
+        ZLIB_VERNUM
+
+
+        OS_CODE
+
+        MAX_MEM_LEVEL
+        MAX_WBITS
+
+        Z_ASCII
+        Z_BEST_COMPRESSION
+        Z_BEST_SPEED
+        Z_BINARY
+        Z_BLOCK
+        Z_BUF_ERROR
+        Z_DATA_ERROR
+        Z_DEFAULT_COMPRESSION
+        Z_DEFAULT_STRATEGY
+        Z_DEFLATED
+        Z_ERRNO
+        Z_FILTERED
+        Z_FIXED
+        Z_FINISH
+        Z_FULL_FLUSH
+        Z_HUFFMAN_ONLY
+        Z_MEM_ERROR
+        Z_NEED_DICT
+        Z_NO_COMPRESSION
+        Z_NO_FLUSH
+        Z_NULL
+        Z_OK
+        Z_PARTIAL_FLUSH
+        Z_RLE
+        Z_STREAM_END
+        Z_STREAM_ERROR
+        Z_SYNC_FLUSH
+        Z_TREES
+        Z_UNKNOWN
+        Z_VERSION_ERROR
+
+        ZLIBNG_VERSION
+        ZLIBNG_VERNUM
+        ZLIBNG_VER_MAJOR
+        ZLIBNG_VER_MINOR
+        ZLIBNG_VER_REVISION
+        ZLIBNG_VER_STATUS
+        ZLIBNG_VER_MODIFIED
+
+        WANT_GZIP
+        WANT_GZIP_OR_ZLIB
+);
+
+push @EXPORT, qw(crc32 adler32 DEF_WBITS);
+
+use constant WANT_GZIP           => 16;
+use constant WANT_GZIP_OR_ZLIB   => 32;
+
+sub AUTOLOAD {
+    my($constname);
+    ($constname = $AUTOLOAD) =~ s/.*:://;
+    my ($error, $val) = constant($constname);
+    Carp::croak $error if $error;
+    no strict 'refs';
+    *{$AUTOLOAD} = sub { $val };
+    goto &{$AUTOLOAD};
+}
+
+use constant FLAG_APPEND             => 1 ;
+use constant FLAG_CRC                => 2 ;
+use constant FLAG_ADLER              => 4 ;
+use constant FLAG_CONSUME_INPUT      => 8 ;
+use constant FLAG_LIMIT_OUTPUT       => 16 ;
+
+eval {
+    require XSLoader;
+    XSLoader::load('Compress::Raw::Zlib', $XS_VERSION);
+    1;
+}
+or do {
+    require DynaLoader;
+    local @ISA = qw(DynaLoader);
+    bootstrap Compress::Raw::Zlib $XS_VERSION ;
+};
+
+
+use constant Parse_any      => 0x01;
+use constant Parse_unsigned => 0x02;
+use constant Parse_signed   => 0x04;
+use constant Parse_boolean  => 0x08;
+#use constant Parse_string   => 0x10;
+#use constant Parse_custom   => 0x12;
+
+#use constant Parse_store_ref => 0x100 ;
+
+use constant OFF_PARSED     => 0 ;
+use constant OFF_TYPE       => 1 ;
+use constant OFF_DEFAULT    => 2 ;
+use constant OFF_FIXED      => 3 ;
+use constant OFF_FIRST_ONLY => 4 ;
+use constant OFF_STICKY     => 5 ;
+
+
+
+sub ParseParameters
+{
+    my $level = shift || 0 ;
+
+    my $sub = (caller($level + 1))[3] ;
+    #local $Carp::CarpLevel = 1 ;
+    my $p = new Compress::Raw::Zlib::Parameters() ;
+    $p->parse(@_)
+        or croak "$sub: $p->{Error}" ;
+
+    return $p;
+}
+
+

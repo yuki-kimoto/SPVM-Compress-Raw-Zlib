@@ -4,3 +4,47 @@
 class Compress::Raw::Zlib::DeflateStreame {
   version_from Compress::Raw::Zlib;
 }
+
+__END__
+
+sub Compress::Raw::Zlib::deflateStream::STORABLE_freeze
+{
+    my $type = ref shift;
+    croak "Cannot freeze $type object\n";
+}
+
+sub Compress::Raw::Zlib::deflateStream::STORABLE_thaw
+{
+    my $type = ref shift;
+    croak "Cannot thaw $type object\n";
+}
+
+
+sub Compress::Raw::Zlib::deflateStream::deflateParams
+{
+    my $self = shift ;
+    my ($got) = ParseParameters(0, {
+                'Level'      => [1, 1, Parse_signed,   undef],
+                'Strategy'   => [1, 1, Parse_unsigned, undef],
+                'Bufsize'    => [1, 1, Parse_unsigned, undef],
+                },
+                @_) ;
+
+    croak "Compress::Raw::Zlib::deflateParams needs Level and/or Strategy"
+        unless $got->parsed('Level') + $got->parsed('Strategy') +
+            $got->parsed('Bufsize');
+
+    croak "Compress::Raw::Zlib::Inflate::deflateParams: Bufsize must be >= 1, you specified " .
+            $got->value('Bufsize')
+        if $got->parsed('Bufsize') && $got->value('Bufsize') <= 1;
+
+    my $flags = 0;
+    $flags |= 1 if $got->parsed('Level') ;
+    $flags |= 2 if $got->parsed('Strategy') ;
+    $flags |= 4 if $got->parsed('Bufsize') ;
+
+    $self->_deflateParams($flags, $got->value('Level'),
+                          $got->value('Strategy'), $got->value('Bufsize'));
+
+}
+

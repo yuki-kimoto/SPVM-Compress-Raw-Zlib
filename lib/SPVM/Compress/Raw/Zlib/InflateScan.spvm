@@ -4,3 +4,34 @@
 class Compress::Raw::Zlib::InflateScan {
   version_from Compress::Raw::Zlib;
 }
+
+__END__
+
+sub Compress::Raw::Zlib::InflateScan::new
+{
+    my $pkg = shift ;
+    my ($got) = ParseParameters(0,
+                    {
+                        'CRC32'         => [1, 1, Parse_boolean,  0],
+                        'ADLER32'       => [1, 1, Parse_boolean,  0],
+                        'Bufsize'       => [1, 1, Parse_unsigned, 4096],
+
+                        'WindowBits'    => [1, 1, Parse_signed,   -MAX_WBITS()],
+                        'Dictionary'    => [1, 1, Parse_any,      ""],
+            }, @_) ;
+
+
+    croak "Compress::Raw::Zlib::InflateScan::new: Bufsize must be >= 1, you specified " .
+            $got->value('Bufsize')
+        unless $got->value('Bufsize') >= 1;
+
+    my $flags = 0 ;
+    #$flags |= FLAG_APPEND if $got->value('AppendOutput') ;
+    $flags |= FLAG_CRC    if $got->value('CRC32') ;
+    $flags |= FLAG_ADLER  if $got->value('ADLER32') ;
+    #$flags |= FLAG_CONSUME_INPUT if $got->value('ConsumeInput') ;
+
+    _inflateScanInit($flags, $got->value('WindowBits'), $got->value('Bufsize'),
+                 '') ;
+}
+

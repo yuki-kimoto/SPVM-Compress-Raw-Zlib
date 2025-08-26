@@ -4,3 +4,50 @@
 class Compress::Raw::Zlib::Deflate {
   version_from Compress::Raw::Zlib;
 }
+
+__END__
+
+our $OPTIONS_deflate =
+    {
+        'AppendOutput'  => [1, 1, Parse_boolean,  0],
+        'CRC32'         => [1, 1, Parse_boolean,  0],
+        'ADLER32'       => [1, 1, Parse_boolean,  0],
+        'Bufsize'       => [1, 1, Parse_unsigned, 4096],
+
+        'Level'         => [1, 1, Parse_signed,   Z_DEFAULT_COMPRESSION()],
+        'Method'        => [1, 1, Parse_unsigned, Z_DEFLATED()],
+        'WindowBits'    => [1, 1, Parse_signed,   MAX_WBITS()],
+        'MemLevel'      => [1, 1, Parse_unsigned, MAX_MEM_LEVEL()],
+        'Strategy'      => [1, 1, Parse_unsigned, Z_DEFAULT_STRATEGY()],
+        'Dictionary'    => [1, 1, Parse_any,      ""],
+    };
+
+sub Compress::Raw::Zlib::Deflate::new
+{
+    my $pkg = shift ;
+    my ($got) = ParseParameters(0, $OPTIONS_deflate, @_);
+
+    croak "Compress::Raw::Zlib::Deflate::new: Bufsize must be >= 1, you specified " .
+            $got->value('Bufsize')
+        unless $got->value('Bufsize') >= 1;
+
+    my $flags = 0 ;
+    $flags |= FLAG_APPEND if $got->value('AppendOutput') ;
+    $flags |= FLAG_CRC    if $got->value('CRC32') ;
+    $flags |= FLAG_ADLER  if $got->value('ADLER32') ;
+
+    my $windowBits =  $got->value('WindowBits');
+    $windowBits += MAX_WBITS()
+        if ($windowBits & MAX_WBITS()) == 0 ;
+
+    _deflateInit($flags,
+                $got->value('Level'),
+                $got->value('Method'),
+                $windowBits,
+                $got->value('MemLevel'),
+                $got->value('Strategy'),
+                $got->value('Bufsize'),
+                $got->value('Dictionary')) ;
+
+}
+

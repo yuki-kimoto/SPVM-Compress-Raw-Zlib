@@ -4,3 +4,18 @@
 class Compress::Raw::Zlib::InflateStream {
   version_from Compress::Raw::Zlib;
 }
+
+__END__
+
+sub Compress::Raw::Zlib::inflateStream::STORABLE_freeze
+{
+    my $type = ref shift;
+    croak "Cannot freeze $type object\n";
+}
+
+sub Compress::Raw::Zlib::inflateStream::STORABLE_thaw
+{
+    my $type = ref shift;
+    croak "Cannot thaw $type object\n";
+}
+
