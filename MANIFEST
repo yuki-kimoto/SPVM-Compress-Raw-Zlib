@@ -7,6 +7,12 @@ lib/SPVM/Compress/Raw/Zlib.native/include/.gitkeep
 lib/SPVM/Compress/Raw/Zlib.native/src/.gitkeep
 lib/SPVM/Compress/Raw/Zlib.pm
 lib/SPVM/Compress/Raw/Zlib.spvm
+lib/SPVM/Compress/Raw/Zlib/Constant.c
+lib/SPVM/Compress/Raw/Zlib/Constant.config
+lib/SPVM/Compress/Raw/Zlib/Constant.native/include/.gitkeep
+lib/SPVM/Compress/Raw/Zlib/Constant.native/src/.gitkeep
+lib/SPVM/Compress/Raw/Zlib/Constant.pm
+lib/SPVM/Compress/Raw/Zlib/Constant.spvm
 lib/SPVM/Compress/Raw/Zlib/Deflate.c
 lib/SPVM/Compress/Raw/Zlib/Deflate.config
 lib/SPVM/Compress/Raw/Zlib/Deflate.native/include/.gitkeep
