@@ -98,6 +98,15 @@ class Compress::Raw::Zlib::Deflate {
       $self->{ADLER32} = (byte)$options_h->get_or_default_int("-ADLER32", 0);
     }
     
+    unless ($self->{Bufsize} >= 1) {
+      die "The value of '-Bufsize' option must be >= 1.";
+    }
+    
+    my $windowBits =  $self->{WindowBits};
+    
+    if (($self->{WindowBits} & ZLIB->MAX_WBITS) == 0) {
+      $self->{WindowBits} += ZLIB->MAX_WBITS;
+    }
   }
 }
 
