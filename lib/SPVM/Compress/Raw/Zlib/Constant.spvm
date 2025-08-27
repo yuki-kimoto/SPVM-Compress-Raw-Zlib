@@ -4,8 +4,6 @@
 class Compress::Raw::Zlib::Constant {
   version_from Compress::Raw::Zlib;
   
-  allow Compress::Raw::Zlib::Parameters;
-  
   enum {
     WANT_GZIP           = 16,
     WANT_GZIP_OR_ZLIB   = 32,
