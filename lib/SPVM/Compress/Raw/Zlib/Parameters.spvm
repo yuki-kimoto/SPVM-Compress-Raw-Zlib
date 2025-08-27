@@ -5,11 +5,13 @@ class Compress::Raw::Zlib::Parameters {
   version_from Compress::Raw::Zlib;
   
   use Hash;
+  use Fn;
+  use Compress::Raw::Zlib::Constant as CZLIB;
   
   # Undocumented Field
   has Error : string;
   
-  has Got : Hash;
+  has Got : Hash of int[];
   
   # Class Methods
   static method new : Compress::Raw::Zlib::Parameters () {
@@ -31,6 +33,35 @@ class Compress::Raw::Zlib::Parameters {
   # Instance Methods
   method parse : void ($default : object[] = undef, $entered : object[] = undef) {
     
+  }
+
+  method value : int ($name : string) {
+    
+    my $Got = $self->{Got};
+    
+    my $values = (int[])$Got->get(Fn->lc($name));
+    
+    if ($values) {
+      return $values->[CZLIB->OFF_FIXED];
+    }
+    else {
+      return 0;
+    }
+  }
+  
+  method set_value : void ($name : string, $value : int) {
+    
+    my $Got = $self->{Got};
+    
+    my $values = (int[])$Got->get(Fn->lc($name));
+    
+    unless ($values) {
+      $values = new int[6];
+    }
+    
+    $values->[CZLIB->OFF_PARSED] = 1;
+    $values->[CZLIB->OFF_DEFAULT] = $value;
+    $values->[CZLIB->OFF_FIXED] = $value;
   }
 
 }
