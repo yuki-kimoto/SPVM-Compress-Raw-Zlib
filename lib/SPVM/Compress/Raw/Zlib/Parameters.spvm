@@ -3,6 +3,23 @@
 
 class Compress::Raw::Zlib::Parameters {
   version_from Compress::Raw::Zlib;
+  
+  # Undocumented Field
+  has Error : string;
+  
+  has Got : Hash;
+  
+  # Class Methods
+  static method new () {
+    
+    my $self = new Compress::Raw::Zlib::Parameters;
+    
+    $self->{Got} = Hash->new;
+    
+    return $self;
+  }
+
+
 }
 
 __END__
@@ -20,18 +37,6 @@ sub ParseParameters
     return $p;
 }
 
-
-sub Compress::Raw::Zlib::Parameters::new
-{
-    my $class = shift ;
-
-    my $obj = { Error => '',
-                Got   => {},
-              } ;
-
-    #return bless $obj, ref($class) || $class || __PACKAGE__ ;
-    return bless $obj, 'Compress::Raw::Zlib::Parameters' ;
-}
 
 sub Compress::Raw::Zlib::Parameters::setError
 {
