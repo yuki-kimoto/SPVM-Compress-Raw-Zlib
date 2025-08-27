@@ -8,64 +8,32 @@ package SPVM::Compress::Raw::Zlib::Constant;
 
 =head1 Name
 
-SPVM::Compress::Raw::Zlib::Constant - Short Description
+SPVM::Compress::Raw::Zlib::Constant - Compress::Raw::Zlib Constants
 
 =head1 Description
 
-Compress::Raw::Zlib::Constant class in L<SPVM> has methods to do someting.
+Compress::Raw::Zlib::Constant class in L<SPVM> has methods to get L<Compress::Raw::Zlib|SPVM::Compress::Raw::Zlib> constants.
 
 =head1 Usage
 
   use Compress::Raw::Zlib::Constant;
-
-=head1 Details
-
-
-
-=head1 Super Class
-
-
-
-=head1 Interfaces
-
-
+  
+  Compress::Raw::Zlib::Constant->WANT_GZIP;
 
 =head1 Enumerations
 
+=head2 WANT_GZIP
 
+C<static method WANT_GZIP : int ();>
 
-=head1 Fields
+=head2 WANT_GZIP_OR_ZLIB
 
-
-
-=head1 Class Methods
-
-
-
-=head1 Instance Methods
-
-
-
-=head1 Well Known Child Classes
-
-
+C<static method WANT_GZIP_OR_ZLIB : int ();>
 
 =head1 See Also
 
+=over 2
 
+=item * L<Compress::Raw::Zlib|SPVM::Compress::Raw::Zlib>
 
-
-=head1 Repository
-
-
-
-=head1 Author
-
-Yuki Kimoto C<kimoto.yuki@gmail.com>
-
-=head1 Copyright & License
-
-Copyright (c) 2025 Yuki Kimoto
-
-MIT License
-
+=back
