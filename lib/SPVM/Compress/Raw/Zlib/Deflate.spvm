@@ -115,6 +115,8 @@ class Compress::Raw::Zlib::Deflate {
   
   native method deflateReset : void ();
   
+  native method deflateTune : void ($good_length : int, $max_lazy : int, $nice_length : int, $max_chain : int);
+  
   private native method _deflateInit : void ();
 }
 
@@ -125,8 +127,6 @@ __END__
   $status = $d->flush($output [, $flush_type])
 
   $status = $d->deflateParams([OPT])
-
-  $status = $d->deflateTune($good_length, $max_lazy, $nice_length, $max_chain)
 
   $d->dict_adler()
 
@@ -579,23 +579,4 @@ msg(s)
 	RETVAL = (char*)s->stream.msg;
     OUTPUT:
 	RETVAL
-
-int
-deflateTune(s, good_length, max_lazy, nice_length, max_chain)
-            Compress::Raw::Zlib::deflateStream   s
-            int good_length
-            int max_lazy
-            int nice_length
-            int max_chain
-    CODE:
-#ifndef AT_LEAST_ZLIB_1_2_2_3
-        good_length = good_length; max_lazy = max_lazy ; /* Silence -Wall */
-        nice_length = nice_length; max_chain = max_chain; /* Silence -Wall */
-        croak("deflateTune needs zlib 1.2.2.3 or better");
-#else
-	RETVAL = CRZ_deflateTune(&(s->stream), good_length, max_lazy, nice_length, max_chain);
-#endif
-    OUTPUT:
-	RETVAL
-
 
