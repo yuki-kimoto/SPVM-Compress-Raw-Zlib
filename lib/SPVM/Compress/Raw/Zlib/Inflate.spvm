@@ -27,6 +27,76 @@ class Compress::Raw::Zlib::Inflate {
   
   has z_stream : Compress::Raw::Zlib::Z_stream;
   
+  # Class Methods
+  static method new : Compress::Raw::Zlib::Inflate ($options : object[] = undef) {
+    
+    my $self = new Compress::Raw::Zlib::Inflate;
+    
+    $self->init($options);
+    
+    return $self;
+  }
+  
+  # Instance Methods
+  method init : void ($options : object[] = undef) {
+    
+    my $option_names = [
+      "-WindowBits",
+      "-Dictionary",
+      "-Bufsize",
+      "-AppendOutput",
+      "-CRC32",
+      "-ADLER32",
+      "-LimitOutput",
+      "-ConsumeInput",
+    ];
+    
+    Fn->check_option_names($options, $option_names);
+    
+    my $options_h = Hash->new($options);
+    
+    if ($options_h->exists("-WindowBits")) {
+      $self->{WindowBits} = $options_h->get_or_default_int("-WindowBits", ZLIB->MAX_WBITS);
+    }
+    
+    if ($options_h->exists("-Dictionary")) {
+      $self->{Dictionary} = $options_h->get_or_default_string("-Dictionary", "");
+    }
+    
+    if ($options_h->exists("-Bufsize")) {
+      $self->{Bufsize} = $options_h->get_or_default_int("-Bufsize", 4096);
+    }
+    
+    if ($options_h->exists("-AppendOutput")) {
+      $self->{AppendOutput} = (byte)$options_h->get_or_default_int("-AppendOutput", 0);
+    }
+    
+    if ($options_h->exists("-CRC32")) {
+      $self->{CRC32} = (byte)$options_h->get_or_default_int("-CRC32", 0);
+    }
+    
+    if ($options_h->exists("-ADLER32")) {
+      $self->{ADLER32} = (byte)$options_h->get_or_default_int("-ADLER32", 0);
+    }
+    
+    if ($options_h->exists("-LimitOutput")) {
+      $self->{LimitOutput} = (byte)$options_h->get_or_default_int("-LimitOutput", 0);
+    }
+    
+    if ($options_h->exists("-ConsumeInput")) {
+      $self->{ConsumeInput} = (byte)$options_h->get_or_default_int("-ConsumeInput", 0);
+    }
+    
+    unless ($self->{Bufsize} >= 1) {
+      die "The value of '-Bufsize' option must be >= 1.";
+    }
+    
+    if (($self->{WindowBits} & ZLIB->MAX_WBITS) == 0) {
+      $self->{WindowBits} += ZLIB->MAX_WBITS;
+    }
+    
+  }
+  
 }
 
 __END__

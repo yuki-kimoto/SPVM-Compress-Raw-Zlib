@@ -105,8 +105,6 @@ class Compress::Raw::Zlib::Deflate {
       die "The value of '-Bufsize' option must be >= 1.";
     }
     
-    my $windowBits =  $self->{WindowBits};
-    
     if (($self->{WindowBits} & ZLIB->MAX_WBITS) == 0) {
       $self->{WindowBits} += ZLIB->MAX_WBITS;
     }
