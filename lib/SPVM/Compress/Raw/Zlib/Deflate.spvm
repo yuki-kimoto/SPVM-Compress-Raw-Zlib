@@ -6,6 +6,7 @@ class Compress::Raw::Zlib::Deflate {
   
   use Compress::Raw::Zlib::Constant as ZLIB;
   use Fn;
+  use Compress::Raw::Zlib::Z_stream;
   
   # Fields
   has Level : int;
@@ -18,7 +19,7 @@ class Compress::Raw::Zlib::Deflate {
   
   has Strategy : int;
   
-  has Dictionary : object;
+  has Dictionary : string;
   
   has Bufsize : int;
   
@@ -79,7 +80,7 @@ class Compress::Raw::Zlib::Deflate {
     }
     
     if ($options_h->exists("-Dictionary")) {
-      $self->{Dictionary} = $options_h->get_or_default("-Dictionary", "");
+      $self->{Dictionary} = $options_h->get_or_default_string("-Dictionary", "");
     }
     
     if ($options_h->exists("-Bufsize")) {
@@ -107,76 +108,6 @@ class Compress::Raw::Zlib::Deflate {
     if (($self->{WindowBits} & ZLIB->MAX_WBITS) == 0) {
       $self->{WindowBits} += ZLIB->MAX_WBITS;
     }
+    
   }
 }
-
-__END__
-
-void
-_deflateInit(flags,level, method, windowBits, memLevel, strategy, bufsize, dictionary)
-    int flags
-    int	level
-    int method
-    int windowBits
-    int memLevel
-    int strategy
-    uLong bufsize
-    SV* dictionary
-  PPCODE:
-    int err ;
-    deflateStream s ;
-
-    if (trace)
-        warn("in _deflateInit(level=%d, method=%d, windowBits=%d, memLevel=%d, strategy=%d, bufsize=%ld dictionary=%p)\n",
-	level, method, windowBits, memLevel, strategy, bufsize, dictionary) ;
-    if ((s = InitStream() )) {
-
-        s->Level      = level;
-        s->Method     = method;
-        s->WindowBits = windowBits;
-        s->MemLevel   = memLevel;
-        s->Strategy   = strategy;
-
-        err = CRZ_deflateInit2(&(s->stream), level,
-			   method, windowBits, memLevel, strategy);
-
-        if (trace) {
-            warn(" _deflateInit2 returned %d (state %p)\n", err, s);
-            DispStream(s, "INIT");
-        }
-
-	/* Check if a dictionary has been specified */
-	SvGETMAGIC(dictionary);
-	if (err == Z_OK && SvPOK(dictionary) && SvCUR(dictionary)) {
-#ifdef UTF8_AVAILABLE
-            if (DO_UTF8(dictionary) && !sv_utf8_downgrade(dictionary, 1))
-                croak("Wide character in Compress::Raw::Zlib::Deflate::new dicrionary parameter");
-#endif
-	    err = CRZ_deflateSetDictionary(&(s->stream), (const Bytef*) SvPVX(dictionary), SvCUR(dictionary)) ;
-        if (trace)
-            warn("deflateSetDictionary returned %d\n", err);
-	    s->dict_adler = s->stream.adler ;
-	}
-
-        if (err != Z_OK) {
-            Safefree(s) ;
-            s = NULL ;
-	}
-	else
-	    PostInitStream(s, flags, bufsize, windowBits) ;
-
-    }
-    else
-        err = Z_MEM_ERROR ;
-
-    {
-        SV* obj = sv_setref_pv(sv_newmortal(),
-            "Compress::Raw::Zlib::deflateStream", (void*)s);
-        XPUSHs(obj);
-    }
-    if (GIMME_V == G_ARRAY) {
-        SV * sv = sv_2mortal(newSViv(err)) ;
-	setDUALstatus(sv, err);
-        XPUSHs(sv) ;
-    }
-
