@@ -3,6 +3,50 @@
 
 class Compress::Raw::Zlib::Deflate {
   version_from Compress::Raw::Zlib;
+  
+  # Fields
+  has Level : int;
+  
+  has Method : int;
+  
+  has WindowBits : int;
+  
+  has MemLevel : int;
+  
+  has Strategy : int;
+  
+  has Dictionary : object;
+  
+  has Bufsize : int;
+  
+  has AppendOutput : byte;
+  
+  has CRC32 : byte;
+  
+  has ADLER32 : byte;
+  
+  # Class Methods
+  static method new : Compress::Raw::Zlib::Deflate ($options : object[]) {
+    
+    my $option_names = [
+      "-Level",
+      "-Method",
+      "-WindowBits",
+      "-MemLevel",
+      "-Strategy",
+      "-Dictionary",
+      "-Bufsize",
+      "-AppendOutput",
+      "-CRC32",
+      "-ADLER32",
+    ];
+    
+    Fn->check_option_names($options, $option_names);
+    
+    my $options_h = Hash->new($options);
+    
+  }
+  
 }
 
 __END__
