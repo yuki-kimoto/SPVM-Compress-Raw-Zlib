@@ -127,8 +127,8 @@ class Compress::Raw::Zlib::Deflate {
     return $self->{Bufsize};
   }
   
-  method get_Level : int () {
-    return $self->{Level};
+  method get_Strategy : int () {
+    return $self->{Strategy};
   }
   
   method adler32 : long () {
@@ -149,8 +149,6 @@ __END__
   $d->dict_adler()
 
   $d->crc32()
-
-  $d->get_Strategy()
 
 MODULE = Compress::Raw::Zlib PACKAGE = Compress::Raw::Zlib::deflateStream
 
@@ -486,15 +484,6 @@ _deflateParams(s, flags, level, strategy, bufsize)
             RETVAL = Z_OK;
     OUTPUT:
         RETVAL
-
-
-int
-get_Strategy(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-	RETVAL = s->Strategy ;
-    OUTPUT:
-	RETVAL
 
 
 int
