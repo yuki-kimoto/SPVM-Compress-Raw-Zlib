@@ -21,7 +21,7 @@ class Compress::Raw::Zlib::Deflate {
   
   has Dictionary : string;
   
-  has Bufsize : int;
+  has Bufsize : long;
   
   has AppendOutput : byte;
   
@@ -86,7 +86,7 @@ class Compress::Raw::Zlib::Deflate {
     }
     
     if ($options_h->exists("-Bufsize")) {
-      $self->{Bufsize} = $options_h->get_or_default_int("-Bufsize", 4096);
+      $self->{Bufsize} = $options_h->get_or_default_long("-Bufsize", 4096);
     }
     
     if ($options_h->exists("-AppendOutput")) {
@@ -118,7 +118,11 @@ class Compress::Raw::Zlib::Deflate {
   native method deflateTune : void ($good_length : int, $max_lazy : int, $nice_length : int, $max_chain : int);
   
   native method total_out : long ();
-
+  
+  method get_Bufsize : long () {
+    return $self->{Bufsize};
+  }
+  
   private native method _deflateInit : void ();
 }
 
@@ -495,15 +499,6 @@ get_Strategy(s)
         Compress::Raw::Zlib::deflateStream   s
     CODE:
 	RETVAL = s->Strategy ;
-    OUTPUT:
-	RETVAL
-
-
-uLong
-get_Bufsize(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-	RETVAL = s->bufsize ;
     OUTPUT:
 	RETVAL
 
