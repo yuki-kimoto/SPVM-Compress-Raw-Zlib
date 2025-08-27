@@ -4,17 +4,82 @@
 class Compress::Raw::Zlib::Constant {
   version_from Compress::Raw::Zlib;
   
-  enum {
-    WANT_GZIP           = 16,
-    WANT_GZIP_OR_ZLIB   = 32,
-  }
-  
-  private enum {
-    FLAG_APPEND             = 1,
-    FLAG_CRC                = 2,
-    FLAG_ADLER              = 4,
-    FLAG_CONSUME_INPUT      = 8,
-    FLAG_LIMIT_OUTPUT       = 16,
-  }
-  
+  native static method DEF_WBITS : int ();
+
+  native static method MAX_MEM_LEVEL : int ();
+
+  native static method MAX_WBITS : int ();
+
+  native static method OS_CODE : int ();
+
+  native static method Z_ASCII : int ();
+
+  native static method Z_BEST_COMPRESSION : int ();
+
+  native static method Z_BEST_SPEED : int ();
+
+  native static method Z_BINARY : int ();
+
+  native static method Z_BLOCK : int ();
+
+  native static method Z_BUF_ERROR : int ();
+
+  native static method Z_DATA_ERROR : int ();
+
+  native static method Z_DEFAULT_COMPRESSION : int ();
+
+  native static method Z_DEFAULT_STRATEGY : int ();
+
+  native static method Z_DEFLATED : int ();
+
+  native static method Z_ERRNO : int ();
+
+  native static method Z_FILTERED : int ();
+
+  native static method Z_FINISH : int ();
+
+  native static method Z_FIXED : int ();
+
+  native static method Z_FULL_FLUSH : int ();
+
+  native static method Z_HUFFMAN_ONLY : int ();
+
+  native static method Z_MEM_ERROR : int ();
+
+  native static method Z_NEED_DICT : int ();
+
+  native static method Z_NO_COMPRESSION : int ();
+
+  native static method Z_NO_FLUSH : int ();
+
+  native static method Z_OK : int ();
+
+  native static method Z_PARTIAL_FLUSH : int ();
+
+  native static method Z_RLE : int ();
+
+  native static method Z_STREAM_END : int ();
+
+  native static method Z_STREAM_ERROR : int ();
+
+  native static method Z_SYNC_FLUSH : int ();
+
+  native static method Z_UNKNOWN : int ();
+
+  native static method Z_VERSION_ERROR : int ();
+
+  native static method ZLIBNG_VERNUM : int ();
+
+  native static method ZLIBNG_VER_MAJOR : int ();
+
+  native static method ZLIBNG_VER_MINOR : int ();
+
+  native static method ZLIBNG_VER_REVISION : int ();
+
+  native static method ZLIBNG_VER_MODIFIED : int ();
+
+  native static method WANT_GZIP : int ();
+
+  native static method WANT_GZIP_OR_ZLIB : int ();
+
 }
