@@ -3,31 +3,36 @@
 
 class Compress::Raw::Zlib::Constant {
   version_from Compress::Raw::Zlib;
+  
+  enum {
+    WANT_GZIP           = 16,
+    WANT_GZIP_OR_ZLIB   = 32,
+  }
+  
+  enum {
+    FLAG_APPEND             = 1,
+    FLAG_CRC                = 2,
+    FLAG_ADLER              = 4,
+    FLAG_CONSUME_INPUT      = 8,
+    FLAG_LIMIT_OUTPUT       = 16,
+  }
+  
+  enum {
+    Parse_any      = 0x01,
+    Parse_unsigned = 0x02,
+    Parse_signed   = 0x04,
+    Parse_boolean  = 0x08,
+    #Parse_string   = 0x10,
+    #Parse_custom   = 0x12,
+    #Parse_store_ref = 0x100,
+  }
+  
+  enum {
+    OFF_PARSED     = 0,
+    OFF_TYPE       = 1,
+    OFF_DEFAULT    = 2,
+    OFF_FIXED      = 3,
+    OFF_FIRST_ONLY = 4,
+    OFF_STICKY     = 5,
+  }
 }
-
-__END__
-
-use constant WANT_GZIP           => 16;
-use constant WANT_GZIP_OR_ZLIB   => 32;
-
-use constant FLAG_APPEND             => 1 ;
-use constant FLAG_CRC                => 2 ;
-use constant FLAG_ADLER              => 4 ;
-use constant FLAG_CONSUME_INPUT      => 8 ;
-use constant FLAG_LIMIT_OUTPUT       => 16 ;
-
-use constant Parse_any      => 0x01;
-use constant Parse_unsigned => 0x02;
-use constant Parse_signed   => 0x04;
-use constant Parse_boolean  => 0x08;
-#use constant Parse_string   => 0x10;
-#use constant Parse_custom   => 0x12;
-
-#use constant Parse_store_ref => 0x100 ;
-
-use constant OFF_PARSED     => 0 ;
-use constant OFF_TYPE       => 1 ;
-use constant OFF_DEFAULT    => 2 ;
-use constant OFF_FIXED      => 3 ;
-use constant OFF_FIRST_ONLY => 4 ;
-use constant OFF_STICKY     => 5 ;

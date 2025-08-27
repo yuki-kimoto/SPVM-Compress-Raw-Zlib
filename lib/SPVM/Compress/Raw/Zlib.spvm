@@ -5,7 +5,8 @@ class Compress::Raw::Zlib {
   version "0.001";
   
   use Resource::Zlib;
-
+  use Compress::Raw::Zlib::Constant;
+  
 }
 
 __END__
