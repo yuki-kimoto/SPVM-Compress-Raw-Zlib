@@ -11,5 +11,3 @@ int32_t SPVM__Compress__Raw__Zlib__foo(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   return 0;
 }
-
-

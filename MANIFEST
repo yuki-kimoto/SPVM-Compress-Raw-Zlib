@@ -21,6 +21,10 @@ lib/SPVM/Compress/Raw/Zlib/Inflate.c
 lib/SPVM/Compress/Raw/Zlib/Inflate.config
 lib/SPVM/Compress/Raw/Zlib/Inflate.pm
 lib/SPVM/Compress/Raw/Zlib/Inflate.spvm
+lib/SPVM/Compress/Raw/Zlib/Z_stream.c
+lib/SPVM/Compress/Raw/Zlib/Z_stream.config
+lib/SPVM/Compress/Raw/Zlib/Z_stream.pm
+lib/SPVM/Compress/Raw/Zlib/Z_stream.spvm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
