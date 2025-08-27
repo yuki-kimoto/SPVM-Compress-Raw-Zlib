@@ -8,7 +8,7 @@ class Compress::Raw::Zlib::Deflate {
   use Fn;
   use Compress::Raw::Zlib::Z_stream;
   
-  # Fields
+  # Undocumented Fields
   has Level : int;
   
   has Method : int;
@@ -28,6 +28,8 @@ class Compress::Raw::Zlib::Deflate {
   has CRC32 : byte;
   
   has ADLER32 : byte;
+  
+  has z_stream : Compress::Raw::Zlib::Z_stream;
   
   # Class Methods
   static method new : Compress::Raw::Zlib::Deflate ($options : object[] = undef) {
@@ -109,5 +111,9 @@ class Compress::Raw::Zlib::Deflate {
       $self->{WindowBits} += ZLIB->MAX_WBITS;
     }
     
+    $self->_deflateInit;
+    
   }
+  
+  private native method _deflateInit : void ();
 }
