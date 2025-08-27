@@ -3,6 +3,30 @@
 
 class Compress::Raw::Zlib::Inflate {
   version_from Compress::Raw::Zlib;
+  
+  use Compress::Raw::Zlib::Constant as ZLIB;
+  use Fn;
+  use Compress::Raw::Zlib::Z_stream;
+  
+  # Undocumented Fields
+  has WindowBits : int;
+  
+  has Dictionary : string;
+  
+  has Bufsize : int;
+  
+  has AppendOutput : byte;
+  
+  has CRC32 : byte;
+  
+  has ADLER32 : byte;
+  
+  has LimitOutput : byte;
+  
+  has ConsumeInput : byte;
+  
+  has z_stream : Compress::Raw::Zlib::Z_stream;
+  
 }
 
 __END__

@@ -68,6 +68,8 @@ sub MY::postamble {
     
     $make_rule .= SPVM::Builder::Util::API::create_make_rule_native('Compress::Raw::Zlib');
     $make_rule .= SPVM::Builder::Util::API::create_make_rule_native('Compress::Raw::Zlib::Constant');
+    $make_rule .= SPVM::Builder::Util::API::create_make_rule_native('Compress::Raw::Zlib::Deflate');
+    $make_rule .= SPVM::Builder::Util::API::create_make_rule_native('Compress::Raw::Zlib::Inflate');
     
   }
   
