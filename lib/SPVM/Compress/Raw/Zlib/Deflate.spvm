@@ -4,6 +4,9 @@
 class Compress::Raw::Zlib::Deflate {
   version_from Compress::Raw::Zlib;
   
+  use Compress::Raw::Zlib::Constant as ZLIB;
+  use Fn;
+  
   # Fields
   has Level : int;
   
@@ -26,7 +29,17 @@ class Compress::Raw::Zlib::Deflate {
   has ADLER32 : byte;
   
   # Class Methods
-  static method new : Compress::Raw::Zlib::Deflate ($options : object[]) {
+  static method new : Compress::Raw::Zlib::Deflate ($options : object[] = undef) {
+    
+    my $self = new Compress::Raw::Zlib::Deflate;
+    
+    $self->init($options);
+    
+    return $self;
+  }
+  
+  # Instance Methods
+  method init : void ($options : object[] = undef) {
     
     my $option_names = [
       "-Level",
@@ -45,8 +58,47 @@ class Compress::Raw::Zlib::Deflate {
     
     my $options_h = Hash->new($options);
     
+    if ($options_h->exists("-Level")) {
+      $self->{Level} = $options_h->get_or_default_int("-Level", ZLIB->Z_DEFAULT_COMPRESSION);
+    }
+    
+    if ($options_h->exists("-Method")) {
+      $self->{Method} = $options_h->get_or_default_int("-Method", ZLIB->Z_DEFLATED);
+    }
+    
+    if ($options_h->exists("-WindowBits")) {
+      $self->{WindowBits} = $options_h->get_or_default_int("-WindowBits", ZLIB->MAX_WBITS);
+    }
+    
+    if ($options_h->exists("-MemLevel")) {
+      $self->{MemLevel} = $options_h->get_or_default_int("-MemLevel", ZLIB->MAX_MEM_LEVEL);
+    }
+    
+    if ($options_h->exists("-Strategy")) {
+      $self->{Strategy} = $options_h->get_or_default_int("-Strategy", ZLIB->Z_DEFAULT_STRATEGY);
+    }
+    
+    if ($options_h->exists("-Dictionary")) {
+      $self->{Dictionary} = $options_h->get_or_default("-Dictionary", "");
+    }
+    
+    if ($options_h->exists("-Bufsize")) {
+      $self->{Bufsize} = $options_h->get_or_default_int("-Bufsize", 4096);
+    }
+    
+    if ($options_h->exists("-AppendOutput")) {
+      $self->{AppendOutput} = (byte)$options_h->get_or_default_int("-AppendOutput", 0);
+    }
+    
+    if ($options_h->exists("-CRC32")) {
+      $self->{CRC32} = (byte)$options_h->get_or_default_int("-CRC32", 0);
+    }
+    
+    if ($options_h->exists("-ADLER32")) {
+      $self->{ADLER32} = (byte)$options_h->get_or_default_int("-ADLER32", 0);
+    }
+    
   }
-  
 }
 
 __END__
