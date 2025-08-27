@@ -31,6 +31,8 @@ class Compress::Raw::Zlib::Deflate {
   
   has z_stream : Compress::Raw::Zlib::Z_stream;
   
+  has adler32 : long;
+  
   # Class Methods
   static method new : Compress::Raw::Zlib::Deflate ($options : object[] = undef) {
     
@@ -123,6 +125,10 @@ class Compress::Raw::Zlib::Deflate {
   
   method get_Bufsize : long () {
     return $self->{Bufsize};
+  }
+  
+  method adler32 : long () {
+    return $self->{adler32};
   }
   
   private native method _deflateInit : void ();
@@ -527,29 +533,5 @@ dict_adler(s)
     CODE:
 	RETVAL = s->dict_adler ;
     OUTPUT:
-	RETVAL
-
-uLong
-adler32(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-	RETVAL = s->adler32 ;
-    OUTPUT:
-	RETVAL
-
-uLong
-compressedBytes(s)
-    Compress::Raw::Zlib::deflateStream	s
-    CODE:
-        RETVAL = s->compressedBytes;
-  OUTPUT:
-	RETVAL
-
-uLong
-uncompressedBytes(s)
-    Compress::Raw::Zlib::deflateStream	s
-    CODE:
-        RETVAL = s->uncompressedBytes;
-  OUTPUT:
 	RETVAL
 
