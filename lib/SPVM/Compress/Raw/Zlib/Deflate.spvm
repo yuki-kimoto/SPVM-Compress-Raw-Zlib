@@ -143,6 +143,8 @@ class Compress::Raw::Zlib::Deflate {
   
   native method dict_adler : long ();
   
+  native method DESTROY : void ();
+  
   private native method _deflateInit : void ();
 }
 
@@ -303,22 +305,6 @@ deflate (s, buf, output)
     }
     OUTPUT:
 	RETVAL
-
-
-void
-DESTROY(s)
-    Compress::Raw::Zlib::deflateStream	s
-  CODE:
-    if (trace)
-        printf("Compress::Raw::Zlib::deflateStream::DESTROY %p\n", s);
-    CRZ_deflateEnd(&s->stream) ;
-    if (s->dictionary)
-	SvREFCNT_dec(s->dictionary) ;
-#ifndef SETP_BYTE
-    if (s->deflateParams_out_buffer)
-        Safefree(s->deflateParams_out_buffer);
-#endif
-    Safefree(s) ;
 
 
 DualType
