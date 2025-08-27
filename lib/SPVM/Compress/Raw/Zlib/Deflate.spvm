@@ -135,6 +135,8 @@ class Compress::Raw::Zlib::Deflate {
     return $self->{adler32};
   }
   
+  native method dict_adler : long ();
+  
   private native method _deflateInit : void ();
 }
 
@@ -145,8 +147,6 @@ __END__
   $status = $d->flush($output [, $flush_type])
 
   $status = $d->deflateParams([OPT])
-
-  $d->dict_adler()
 
   $d->crc32()
 
@@ -499,14 +499,6 @@ crc32(s)
         Compress::Raw::Zlib::deflateStream   s
     CODE:
 	RETVAL = s->crc32 ;
-    OUTPUT:
-	RETVAL
-
-uLong
-dict_adler(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-	RETVAL = s->dict_adler ;
     OUTPUT:
 	RETVAL
 
