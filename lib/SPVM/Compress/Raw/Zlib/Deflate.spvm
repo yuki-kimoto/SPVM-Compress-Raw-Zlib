@@ -117,6 +117,8 @@ class Compress::Raw::Zlib::Deflate {
   
   native method deflateTune : void ($good_length : int, $max_lazy : int, $nice_length : int, $max_chain : int);
   
+  native method total_out : long ();
+
   private native method _deflateInit : void ();
 }
 
@@ -137,8 +139,6 @@ __END__
   $d->msg()
 
   $d->total_in()
-
-  $d->total_out()
 
   $d->get_Strategy()
 
@@ -561,22 +561,6 @@ total_in(s)
         Compress::Raw::Zlib::deflateStream   s
     CODE:
         RETVAL = s->stream.total_in ;
-    OUTPUT:
-	RETVAL
-
-uLong
-total_out(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-        RETVAL = s->stream.total_out ;
-    OUTPUT:
-	RETVAL
-
-char*
-msg(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-	RETVAL = (char*)s->stream.msg;
     OUTPUT:
 	RETVAL
 
