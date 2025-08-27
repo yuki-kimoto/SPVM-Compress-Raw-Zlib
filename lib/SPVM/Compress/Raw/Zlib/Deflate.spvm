@@ -119,6 +119,8 @@ class Compress::Raw::Zlib::Deflate {
   
   native method total_out : long ();
   
+  native method total_in : long ();
+  
   method get_Bufsize : long () {
     return $self->{Bufsize};
   }
@@ -549,13 +551,5 @@ uncompressedBytes(s)
     CODE:
         RETVAL = s->uncompressedBytes;
   OUTPUT:
-	RETVAL
-
-uLong
-total_in(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-        RETVAL = s->stream.total_in ;
-    OUTPUT:
 	RETVAL
 
