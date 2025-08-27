@@ -41,12 +41,11 @@ class Compress::Raw::Zlib::Parameters {
     
     my $values = (int[])$Got->get(Fn->lc($name));
     
-    if ($values) {
-      return $values->[CZLIB->OFF_FIXED];
+    unless ($values) {
+      die "The value of $name parameter is not found.";
     }
-    else {
-      return 0;
-    }
+    
+    return $values->[CZLIB->OFF_FIXED];
   }
   
   method set_value : void ($name : string, $value : int) {
