@@ -34,33 +34,46 @@ class Compress::Raw::Zlib::Parameters {
   method parse : void ($default : object[] = undef, $entered : object[] = undef) {
     
   }
-
-  method value : int ($name : string) {
+  
+  method parsed : int ($name : string) {
     
     my $Got = $self->{Got};
     
-    my $values = (int[])$Got->get(Fn->lc($name));
+    my $param = (int[])$Got->get(Fn->lc($name));
     
-    unless ($values) {
-      die "The value of $name parameter is not found.";
+    unless ($param) {
+      return 0;
     }
     
-    return $values->[CZLIB->OFF_FIXED];
+    return $param->[CZLIB->OFF_PARSED] ;
   }
   
-  method set_value : void ($name : string, $value : int) {
+  method value : object ($name : string) {
     
     my $Got = $self->{Got};
     
-    my $values = (int[])$Got->get(Fn->lc($name));
+    my $param = (int[])$Got->get(Fn->lc($name));
     
-    unless ($values) {
-      $values = new int[6];
+    unless ($param) {
+      return undef;
     }
     
-    $values->[CZLIB->OFF_PARSED] = 1;
-    $values->[CZLIB->OFF_DEFAULT] = $value;
-    $values->[CZLIB->OFF_FIXED] = $value;
+    return $param->[CZLIB->OFF_FIXED];
+  }
+  
+  method set_value : void ($name : string, $value : object) {
+    
+    my $Got = $self->{Got};
+    
+    my $param = (object[])$Got->get(Fn->lc($name));
+    
+    unless ($param) {
+      $param = new object[6];
+    }
+    
+    $param->[CZLIB->OFF_PARSED] = 1;
+    $param->[CZLIB->OFF_DEFAULT] = $value;
+    $param->[CZLIB->OFF_FIXED] = $value;
   }
 
 }
@@ -241,27 +254,4 @@ sub Compress::Raw::Zlib::Parameters::_checkType
 }
 
 
-
-sub Compress::Raw::Zlib::Parameters::parsed
-{
-    my $self = shift ;
-    my $name = shift ;
-
-    return $self->{Got}{lc $name}[OFF_PARSED] ;
-}
-
-sub Compress::Raw::Zlib::Parameters::value
-{
-    my $self = shift ;
-    my $name = shift ;
-
-    if (@_)
-    {
-        $self->{Got}{lc $name}[OFF_PARSED]  = 1;
-        $self->{Got}{lc $name}[OFF_DEFAULT] = $_[0] ;
-        $self->{Got}{lc $name}[OFF_FIXED]   = $_[0] ;
-    }
-
-    return $self->{Got}{lc $name}[OFF_FIXED] ;
-}
 
