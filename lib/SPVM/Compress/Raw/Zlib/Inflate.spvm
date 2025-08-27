@@ -84,7 +84,7 @@ class Compress::Raw::Zlib::Inflate {
     }
     
     if ($options_h->exists("-ConsumeInput")) {
-      $self->{ConsumeInput} = (byte)$options_h->get_or_default_int("-ConsumeInput", 0);
+      $self->{ConsumeInput} = (byte)$options_h->get_or_default_int("-ConsumeInput", 1);
     }
     
     unless ($self->{Bufsize} >= 1) {
