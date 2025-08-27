@@ -17,23 +17,4 @@ class Compress::Raw::Zlib::Constant {
     FLAG_LIMIT_OUTPUT       = 16,
   }
   
-  private enum {
-    Parse_any      = 0x01,
-    Parse_unsigned = 0x02,
-    Parse_signed   = 0x04,
-    Parse_boolean  = 0x08,
-    #Parse_string   = 0x10,
-    #Parse_custom   = 0x12,
-    #Parse_store_ref = 0x100,
-  }
-  
-  private enum {
-    OFF_PARSED     = 0,
-    OFF_TYPE       = 1,
-    OFF_DEFAULT    = 2,
-    OFF_FIXED      = 3,
-    OFF_FIRST_ONLY = 4,
-    OFF_STICKY     = 5,
-  }
-  
 }
