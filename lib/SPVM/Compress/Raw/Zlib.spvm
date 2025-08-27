@@ -6,5 +6,5 @@ class Compress::Raw::Zlib {
   
   use Resource::Zlib;
   use Compress::Raw::Zlib::Constant;
-  
+  use Compress::Raw::Zlib::Parameters;
 }

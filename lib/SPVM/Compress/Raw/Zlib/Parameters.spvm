@@ -4,13 +4,15 @@
 class Compress::Raw::Zlib::Parameters {
   version_from Compress::Raw::Zlib;
   
+  use Hash;
+  
   # Undocumented Field
   has Error : string;
   
   has Got : Hash;
   
   # Class Methods
-  static method new () {
+  static method new : Compress::Raw::Zlib::Parameters () {
     
     my $self = new Compress::Raw::Zlib::Parameters;
     
@@ -18,24 +20,22 @@ class Compress::Raw::Zlib::Parameters {
     
     return $self;
   }
-
+  
+  static method ParseParameters : Compress::Raw::Zlib::Parameters ($default : object[] = undef, $entered : object[] = undef) {
+    
+    my $self = Compress::Raw::Zlib::Parameters->new;
+    $self->parse($default, $entered);
+    return $self;
+  }
+  
+  # Instance Methods
+  method parse : void ($default : object[] = undef, $entered : object[] = undef) {
+    
+  }
 
 }
 
 __END__
-
-sub ParseParameters
-{
-    my $level = shift || 0 ;
-
-    my $sub = (caller($level + 1))[3] ;
-    #local $Carp::CarpLevel = 1 ;
-    my $p = new Compress::Raw::Zlib::Parameters() ;
-    $p->parse(@_)
-        or croak "$sub: $p->{Error}" ;
-
-    return $p;
-}
 
 
 sub Compress::Raw::Zlib::Parameters::setError
