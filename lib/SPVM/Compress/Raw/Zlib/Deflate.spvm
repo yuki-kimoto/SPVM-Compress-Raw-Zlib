@@ -115,8 +115,6 @@ class Compress::Raw::Zlib::Deflate {
   
   native method flush : void ($output_ref : string[], $flush_type : int = -1);
   
-  native method DESTROY : void ();
-  
   method deflateParams : void ($options : object[] = undef) {
     
     my $option_names = [
@@ -136,6 +134,8 @@ class Compress::Raw::Zlib::Deflate {
     }
     
   }
+  
+  native method DESTROY : void ();
   
   private native method _deflateInit : void ();
 }
