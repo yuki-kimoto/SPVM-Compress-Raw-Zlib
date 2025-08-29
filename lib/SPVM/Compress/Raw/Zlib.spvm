@@ -8,6 +8,8 @@ class Compress::Raw::Zlib {
   use Compress::Raw::Zlib::Constant;
   use Compress::Raw::Zlib::Deflate;
   use Compress::Raw::Zlib::Inflate;
+  use Compress::Raw::Zlib::Error::Z_BUF_ERROR;
+  
 }
 
 __END__
