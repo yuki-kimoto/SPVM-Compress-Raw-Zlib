@@ -303,3 +303,89 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
   
   return error_id;
 }
+
+int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* stack) {
+  
+  int32_t error_id = 0;
+  
+  void* obj_self = stack[0].oval;
+  
+  void* obj_output_ref = stack[1].oval;
+  
+  int32_t flush_type = stack[2].ival;
+  
+  if (!(obj_output_ref && env->length(env, stack, obj_output_ref) == 1)) {
+    error_id = env->die(env, stack, "The output reference $output_ref must be 1-length string array.", __func__, FILE_NAME, __LINE__);
+    goto END_OF_FUNC;
+  }
+  
+  void* obj_z_stream = env->get_field_object_by_name(env, stack, obj_self, "z_stream", &error_id, __func__, FILE_NAME, __LINE__);
+  if (error_id) { goto END_OF_FUNC; }
+  
+  z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
+  
+  int64_t Bufsize = env->get_field_long_by_name(env, stack, obj_self, "Bufsize", &error_id, __func__, FILE_NAME, __LINE__);
+  if (error_id) { goto END_OF_FUNC; }
+  
+  int32_t output_length = Bufsize;
+  char* output = env->new_memory_block(env, stack, output_length);
+  
+  st_z_stream->next_out = output;
+  st_z_stream->avail_out = Bufsize;
+  
+  if (!(flush_type > -1)) {
+    flush_type = Z_FINISH;
+  }
+  
+  int32_t status = -1;
+  while (1){
+    
+    if (st_z_stream->avail_out == 0) {
+      int32_t new_output_length = output_length + Bufsize;
+      
+      char* new_output = env->new_memory_block(env, stack, new_output_length);
+      memcpy(new_output, output, output_length);
+      env->free_memory_block(env, stack, output);
+      output = new_output;
+      
+      st_z_stream->next_out = new_output + output_length;
+      st_z_stream->avail_out = Bufsize;
+    }
+    
+    int32_t avail_out =  st_z_stream->avail_out;
+    
+    int32_t status = deflate(st_z_stream, flush_type);
+    
+    /* Ignore the second of two consecutive flushes: */
+    if (avail_out == st_z_stream->avail_out && status == Z_BUF_ERROR) {
+      status = Z_OK;
+    }
+    
+    if (!(status == Z_OK)) {
+      error_id = env->die(env, stack, "[zlib Error]deflate() failed(error:%d).", status, __func__, FILE_NAME, __LINE__);
+      goto END_OF_FUNC;
+    }
+    
+    /* deflate has finished flushing only when it hasn't used up
+     * all the available space in the output buffer:
+     */
+    if (st_z_stream->avail_out != 0) {
+      break;
+    }
+  }
+  
+  output_length -= st_z_stream->avail_out;
+  
+  void* obj_output = env->new_string(env, stack, output, output_length);
+  
+  env->set_elem_object(env, stack, obj_output_ref, 0, obj_output);
+  
+  END_OF_FUNC:
+  
+  if (output) {
+    env->free_memory_block(env, stack, output);
+  }
+  
+  return error_id;
+}
+
