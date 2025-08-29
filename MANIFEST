@@ -5,8 +5,6 @@ helper/constants.pl
 helper/constants.txt
 lib/SPVM/Compress/Raw/Zlib.c
 lib/SPVM/Compress/Raw/Zlib.config
-lib/SPVM/Compress/Raw/Zlib.native/include/.gitkeep
-lib/SPVM/Compress/Raw/Zlib.native/src/.gitkeep
 lib/SPVM/Compress/Raw/Zlib.pm
 lib/SPVM/Compress/Raw/Zlib.spvm
 lib/SPVM/Compress/Raw/Zlib/Constant.c
