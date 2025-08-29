@@ -451,27 +451,3 @@ int32_t SPVM__Compress__Raw__Zlib__Constant__ZLIBNG_VER_MODIFIED(SPVM_ENV* env, 
   
 }
 
-int32_t SPVM__Compress__Raw__Zlib__Constant__WANT_GZIP(SPVM_ENV* env, SPVM_VALUE* stack) {
-
-#ifdef WANT_GZIP
-  stack[0].ival = WANT_GZIP;
-  return 0;
-#else
-  env->die(env, stack, "WANT_GZIP is not defined on the system", __func__, FILE_NAME, __LINE__);
-  return SPVM_NATIVE_C_BASIC_TYPE_ID_ERROR_NOT_SUPPORTED_CLASS;
-#endif
-  
-}
-
-int32_t SPVM__Compress__Raw__Zlib__Constant__WANT_GZIP_OR_ZLIB(SPVM_ENV* env, SPVM_VALUE* stack) {
-
-#ifdef WANT_GZIP_OR_ZLIB
-  stack[0].ival = WANT_GZIP_OR_ZLIB;
-  return 0;
-#else
-  env->die(env, stack, "WANT_GZIP_OR_ZLIB is not defined on the system", __func__, FILE_NAME, __LINE__);
-  return SPVM_NATIVE_C_BASIC_TYPE_ID_ERROR_NOT_SUPPORTED_CLASS;
-#endif
-  
-}
-

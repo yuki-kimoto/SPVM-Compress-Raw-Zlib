@@ -18,8 +18,6 @@ Compress::Raw::Zlib::Constant class in L<SPVM> has methods to get L<zlib|https:/
 
   use Compress::Raw::Zlib::Constant as ZLIB;
   
-  ZLIB->WANT_GZIP;
-
 =head1 Class Methods
 
 =head2 DEF_WBITS
@@ -248,13 +246,13 @@ Returns the value of C<ZLIBNG_VER_MODIFIED>. If this constant is not defined on 
 
 C<static method WANT_GZIP : int ();>
 
-Returns the value of C<WANT_GZIP>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
+Returns 16.
 
 =head2 WANT_GZIP_OR_ZLIB
 
 C<static method WANT_GZIP_OR_ZLIB : int ();>
 
-Returns the value of C<WANT_GZIP_OR_ZLIB>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
+Returns 32.
 
 =head1 See Also
 

@@ -78,8 +78,12 @@ class Compress::Raw::Zlib::Constant {
 
   native static method ZLIBNG_VER_MODIFIED : int ();
 
-  native static method WANT_GZIP : int ();
+  static method WANT_GZIP : int () {
+    return 16;
+  }
 
-  native static method WANT_GZIP_OR_ZLIB : int ();
+  static method WANT_GZIP_OR_ZLIB : int () {
+    return 32;
+  }
 
 }
