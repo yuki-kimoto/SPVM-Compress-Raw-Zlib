@@ -6,24 +6,15 @@ class Compress::Raw::Zlib::Deflate extends Compress::Raw::Zlib::Base {
   
   use Compress::Raw::Zlib::Constant as ZLIB;
   use Fn;
-  use Compress::Raw::Zlib::Z_stream;
   
   # Undocumented Fields
   has Level : int;
   
   has Method : int;
   
-  has WindowBits : int;
-  
   has MemLevel : int;
   
   has Strategy : int;
-  
-  has Dictionary : string;
-  
-  has Bufsize : long;
-  
-  has z_stream : Compress::Raw::Zlib::Z_stream;
   
   # Class Methods
   static method new : Compress::Raw::Zlib::Deflate ($options : object[] = undef) {
@@ -104,25 +95,15 @@ class Compress::Raw::Zlib::Deflate extends Compress::Raw::Zlib::Base {
   
   native method deflateTune : void ($good_length : int, $max_lazy : int, $nice_length : int, $max_chain : int);
   
-  native method total_out : long ();
-  
-  native method total_in : long ();
-  
-  method get_Bufsize : long () {
-    return $self->{Bufsize};
-  }
-  
-  method get_Strategy : int () {
-    return $self->{Strategy};
-  }
-  
-  native method adler : long ();
-  
   native method deflate : void ($input : string, $output_ref : string[]);
   
   native method flush : void ($output_ref : string[], $flush_type : int = -1);
   
   native method DESTROY : void ();
+  
+  method get_Strategy : int () {
+    return $self->{Strategy};
+  }
   
   private native method _deflateInit : void ();
   
