@@ -109,6 +109,7 @@ class Compress::Raw::Zlib::Deflate {
       die "The value of '-Bufsize' option must be >= 1.";
     }
     
+    # MAX_WBITS is 0b1111. WANT_GZIP is 16.
     if (($self->{WindowBits} & ZLIB->MAX_WBITS) == 0) {
       $self->{WindowBits} += ZLIB->MAX_WBITS;
     }
@@ -146,6 +147,26 @@ class Compress::Raw::Zlib::Deflate {
   native method dict_adler : long ();
   
   native method DESTROY : void ();
+  
+  method deflateParams : void ($options : object[] = undef) {
+    
+    my $option_names = [
+      "-Level",
+      "-Strategy",
+    ];
+    
+    Fn->check_option_names($options, $option_names);
+    
+    my $options_h = Hash->new($options);
+    
+    if ($options_h->exists("-Level")) {
+      $self->{Level} = $options_h->get_int("-Level");
+    }
+    if ($options_h->exists("-Strategy")) {
+      $self->{Strategy} = $options_h->get_int("-Strategy");
+    }
+    
+  }
   
   private native method _deflateInit : void ();
 }
@@ -279,54 +300,3 @@ s->stream.avail_out, done);
     }
     OUTPUT:
 	RETVAL
-
-
-DualType
-_deflateParams(s, flags, level, strategy, bufsize)
-  	Compress::Raw::Zlib::deflateStream	s
-	int 	flags
-	int	level
-	int	strategy
-    	uLong	bufsize
-	bool changed = FALSE;
-    CODE:
-        /* printf("_deflateParams(Flags %d Level %d Strategy %d Bufsize %d)\n", flags, level, strategy, bufsize);
-        printf("Before -- Level %d, Strategy %d, Bufsize %d\n", s->Level, s->Strategy, s->bufsize); */
-        if (flags & 1 && level != s->Level) {
-            s->Level = level ;
-            changed = TRUE;
-        }
-        if (flags & 2 && strategy != s->Strategy) {
-            s->Strategy = strategy ;
-            changed = TRUE;
-        }
-        if (flags & 4)
-            s->bufsize = bufsize;
-        if (changed) {
-#ifdef SETP_BYTE
-            s->stream.avail_in = 0;
-            s->stream.next_out = &(s->deflateParams_out_byte) ;
-            s->stream.avail_out = 1;
-            RETVAL = deflateParams(&(s->stream), s->Level, s->Strategy);
-            s->deflateParams_out_valid =
-            (RETVAL == Z_OK && s->stream.avail_out == 0) ;
-#else
-            /* printf("Level %d Strategy %d, Prev Len %d\n",
-                s->Level, s->Strategy, s->deflateParams_out_length); */
-            RETVAL = flushParams(s);
-#endif
-        }
-        else
-            RETVAL = Z_OK;
-    OUTPUT:
-        RETVAL
-
-
-int
-status(s)
-        Compress::Raw::Zlib::deflateStream   s
-    CODE:
-	RETVAL = s->last_error ;
-    OUTPUT:
-	RETVAL
-
