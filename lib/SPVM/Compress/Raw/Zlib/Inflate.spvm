@@ -61,6 +61,8 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
     
   }
   
+  native method inflateReset : void ();
+  
   native method DESTROY : void ();
   
   private native method _inflateInit : void ();
