@@ -1,7 +1,7 @@
 # Copyright (c) 2025 Yuki Kimoto
 # MIT License
 
-class Compress::Raw::Zlib::Deflate {
+class Compress::Raw::Zlib::Deflate extends Compress::Raw::Zlib::Base {
   version_from Compress::Raw::Zlib;
   
   use Compress::Raw::Zlib::Constant as ZLIB;
