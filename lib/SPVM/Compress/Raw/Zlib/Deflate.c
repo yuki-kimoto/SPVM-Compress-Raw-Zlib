@@ -165,26 +165,6 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__total_in(SPVM_ENV* env, SPVM_VALUE* 
   return error_id;
 }
 
-int32_t SPVM__Compress__Raw__Zlib__Deflate__dict_adler(SPVM_ENV* env, SPVM_VALUE* stack) {
-  
-  int32_t error_id = 0;
-  
-  void* obj_self = stack[0].oval;
-  
-  void* obj_z_stream = env->get_field_object_by_name(env, stack, obj_self, "z_stream", &error_id, __func__, FILE_NAME, __LINE__);
-  if (error_id) { goto END_OF_FUNC; }
-  
-  z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
-  
-  int64_t dict_adler = st_z_stream->adler;
-  
-  stack[0].lval = dict_adler;
-  
-  END_OF_FUNC:
-  
-  return error_id;
-}
-
 int32_t SPVM__Compress__Raw__Zlib__Deflate__DESTROY(SPVM_ENV* env, SPVM_VALUE* stack) {
   
   int32_t error_id = 0;
@@ -233,18 +213,6 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
   
   st_z_stream->next_in = input;
   st_z_stream->avail_in = input_length;
-  
-  int32_t CRC32 = env->get_field_long_by_name(env, stack, obj_self, "CRC32", &error_id, __func__, FILE_NAME, __LINE__);
-  if (error_id) { goto END_OF_FUNC; }
-  
-  if (CRC32) {
-    int64_t f_crc32 = env->get_field_long_by_name(env, stack, obj_self, "crc32", &error_id, __func__, FILE_NAME, __LINE__);
-    if (error_id) { goto END_OF_FUNC; }
-    
-    f_crc32 = crc32(f_crc32, st_z_stream->next_in, st_z_stream->avail_in) ;
-    env->set_field_long_by_name(env, stack, obj_self, "crc32", f_crc32, &error_id, __func__, FILE_NAME, __LINE__);
-    if (error_id) { goto END_OF_FUNC; }
-  }
   
   int32_t ADLER32 = env->get_field_long_by_name(env, stack, obj_self, "ADLER32", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
@@ -385,6 +353,26 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
   if (output) {
     env->free_memory_block(env, stack, output);
   }
+  
+  return error_id;
+}
+
+int32_t SPVM__Compress__Raw__Zlib__Deflate__adler(SPVM_ENV* env, SPVM_VALUE* stack) {
+  
+  int32_t error_id = 0;
+  
+  void* obj_self = stack[0].oval;
+  
+  void* obj_z_stream = env->get_field_object_by_name(env, stack, obj_self, "z_stream", &error_id, __func__, FILE_NAME, __LINE__);
+  if (error_id) { goto END_OF_FUNC; }
+  
+  z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
+  
+  int64_t adler = st_z_stream->adler;
+  
+  stack[0].lval = adler;
+  
+  END_OF_FUNC:
   
   return error_id;
 }

@@ -23,17 +23,7 @@ class Compress::Raw::Zlib::Deflate {
   
   has Bufsize : long;
   
-  has AppendOutput : byte;
-  
-  has CRC32 : byte;
-  
-  has ADLER32 : byte;
-  
   has z_stream : Compress::Raw::Zlib::Z_stream;
-  
-  has adler32 : long;
-  
-  has crc32 : long;
   
   # Class Methods
   static method new : Compress::Raw::Zlib::Deflate ($options : object[] = undef) {
@@ -56,9 +46,6 @@ class Compress::Raw::Zlib::Deflate {
       "-Strategy",
       "-Dictionary",
       "-Bufsize",
-      "-AppendOutput",
-      "-CRC32",
-      "-ADLER32",
     ];
     
     Fn->check_option_names($options, $option_names);
@@ -93,18 +80,6 @@ class Compress::Raw::Zlib::Deflate {
       $self->{Bufsize} = $options_h->get_or_default_long("-Bufsize", 4096);
     }
     
-    if ($options_h->exists("-AppendOutput")) {
-      $self->{AppendOutput} = (byte)$options_h->get_or_default_int("-AppendOutput", 0);
-    }
-    
-    if ($options_h->exists("-CRC32")) {
-      $self->{CRC32} = (byte)$options_h->get_or_default_int("-CRC32", 0);
-    }
-    
-    if ($options_h->exists("-ADLER32")) {
-      $self->{ADLER32} = (byte)$options_h->get_or_default_int("-ADLER32", 0);
-    }
-    
     unless ($self->{Bufsize} >= 1) {
       die "The value of '-Bufsize' option must be >= 1.";
     }
@@ -134,19 +109,11 @@ class Compress::Raw::Zlib::Deflate {
     return $self->{Strategy};
   }
   
-  method adler32 : long () {
-    return $self->{adler32};
-  }
-  
-  method crc32 : long () {
-    return $self->{crc32};
-  }
+  native method adler : long ();
   
   native method deflate : void ($input : string, $output_ref : string[]);
   
   native method flush : void ($output_ref : string[], $flush_type : int = -1);
-  
-  native method dict_adler : long ();
   
   native method DESTROY : void ();
   
