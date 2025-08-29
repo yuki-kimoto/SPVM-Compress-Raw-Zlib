@@ -93,6 +93,27 @@ class Compress::Raw::Zlib::Deflate {
     
   }
   
+  method deflateParams : void ($options : object[] = undef) {
+    
+    my $option_names = [
+      "-Level",
+      "-Strategy",
+    ];
+    
+    Fn->check_option_names($options, $option_names);
+    
+    my $options_h = Hash->new($options);
+    
+    if ($options_h->exists("-Level")) {
+      $self->{Level} = $options_h->get_int("-Level");
+    }
+    if ($options_h->exists("-Strategy")) {
+      $self->{Strategy} = $options_h->get_int("-Strategy");
+    }
+    
+    $self->_deflateParams;
+  }
+  
   native method deflateReset : void ();
   
   native method deflateTune : void ($good_length : int, $max_lazy : int, $nice_length : int, $max_chain : int);
@@ -115,27 +136,9 @@ class Compress::Raw::Zlib::Deflate {
   
   native method flush : void ($output_ref : string[], $flush_type : int = -1);
   
-  method deflateParams : void ($options : object[] = undef) {
-    
-    my $option_names = [
-      "-Level",
-      "-Strategy",
-    ];
-    
-    Fn->check_option_names($options, $option_names);
-    
-    my $options_h = Hash->new($options);
-    
-    if ($options_h->exists("-Level")) {
-      $self->{Level} = $options_h->get_int("-Level");
-    }
-    if ($options_h->exists("-Strategy")) {
-      $self->{Strategy} = $options_h->get_int("-Strategy");
-    }
-    
-  }
-  
   native method DESTROY : void ();
   
   private native method _deflateInit : void ();
+  
+  private native method _deflateParams : void ();
 }

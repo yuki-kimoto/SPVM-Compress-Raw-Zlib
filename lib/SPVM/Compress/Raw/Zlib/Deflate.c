@@ -40,19 +40,19 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
   }
   
   z_stream* st_z_stream = NULL;
-  int32_t err = deflateInit2(st_z_stream, level, method, windowBits, memLevel, strategy);
+  int32_t status = deflateInit2(st_z_stream, level, method, windowBits, memLevel, strategy);
   
-  if (!(err == Z_OK)) {
-    error_id = env->die(env, stack, "[zlib Error]deflateInit2() failed(error:%d).", err, __func__, FILE_NAME, __LINE__);
+  if (!(status == Z_OK)) {
+    error_id = env->die(env, stack, "[zlib Error]deflateInit2() failed(statusor:%d).", status, __func__, FILE_NAME, __LINE__);
     goto END_OF_FUNC;
   }
   
   if (dictionary && dictonary_length) {
-    err = deflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
+    status = deflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
   }
   
-  if (!(err == Z_OK)) {
-    error_id = env->die(env, stack, "[zlib Error]deflateSetDictionary() failed(error:%d).", err, __func__, FILE_NAME, __LINE__);
+  if (!(status == Z_OK)) {
+    error_id = env->die(env, stack, "[zlib Error]deflateSetDictionary() failed(statusor:%d).", status, __func__, FILE_NAME, __LINE__);
     goto END_OF_FUNC;
   }
   
@@ -70,6 +70,31 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
       st_z_stream = NULL;
     }
   }
+  
+  return error_id;
+}
+
+int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateParams(SPVM_ENV* env, SPVM_VALUE* stack) {
+  
+  int32_t error_id = 0;
+  
+  void* obj_self = stack[0].oval;
+  
+  int32_t level = env->get_field_int_by_name(env, stack, obj_self, "Level", &error_id, __func__, FILE_NAME, __LINE__);
+  if (error_id) { goto END_OF_FUNC; }
+  
+  int32_t strategy = env->get_field_int_by_name(env, stack, obj_self, "Strategy", &error_id, __func__, FILE_NAME, __LINE__);
+  if (error_id) { goto END_OF_FUNC; }
+  
+  z_stream* st_z_stream = NULL;
+  int32_t status = deflateParams(st_z_stream, level, strategy);
+  
+  if (!(status == Z_OK)) {
+    error_id = env->die(env, stack, "[zlib Error]deflateParams() failed(error:%d).", status, __func__, FILE_NAME, __LINE__);
+    goto END_OF_FUNC;
+  }
+  
+  END_OF_FUNC:
   
   return error_id;
 }
