@@ -1,7 +1,7 @@
 # Copyright (c) 2025 Yuki Kimoto
 # MIT License
 
-class Compress::Raw::Zlib::Inflate {
+class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
   version_from Compress::Raw::Zlib;
   
   use Compress::Raw::Zlib::Constant as ZLIB;
@@ -9,23 +9,9 @@ class Compress::Raw::Zlib::Inflate {
   use Compress::Raw::Zlib::Z_stream;
   
   # Undocumented Fields
-  has WindowBits : int;
-  
-  has Dictionary : string;
-  
-  has Bufsize : int;
-  
-  has AppendOutput : byte;
-  
-  has CRC32 : byte;
-  
-  has ADLER32 : byte;
-  
-  has LimitOutput : byte;
-  
   has ConsumeInput : byte;
   
-  has z_stream : Compress::Raw::Zlib::Z_stream;
+  has LimitOutput : byte;
   
   # Class Methods
   static method new : Compress::Raw::Zlib::Inflate ($options : object[] = undef) {
@@ -44,7 +30,6 @@ class Compress::Raw::Zlib::Inflate {
       "-WindowBits",
       "-Dictionary",
       "-Bufsize",
-      "-AppendOutput",
       "-LimitOutput",
       "-ConsumeInput",
     ];
@@ -75,6 +60,8 @@ class Compress::Raw::Zlib::Inflate {
     $self->_inflateInit;
     
   }
+  
+  native method DESTROY : void ();
   
   private native method _inflateInit : void ();
 }
