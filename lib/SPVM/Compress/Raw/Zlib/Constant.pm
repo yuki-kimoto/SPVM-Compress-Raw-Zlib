@@ -212,36 +212,6 @@ C<static method Z_VERSION_ERROR : int ();>
 
 Returns the value of C<Z_VERSION_ERROR>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
 
-=head2 ZLIBNG_VERNUM
-
-C<static method ZLIBNG_VERNUM : int ();>
-
-Returns the value of C<ZLIBNG_VERNUM>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
-
-=head2 ZLIBNG_VER_MAJOR
-
-C<static method ZLIBNG_VER_MAJOR : int ();>
-
-Returns the value of C<ZLIBNG_VER_MAJOR>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
-
-=head2 ZLIBNG_VER_MINOR
-
-C<static method ZLIBNG_VER_MINOR : int ();>
-
-Returns the value of C<ZLIBNG_VER_MINOR>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
-
-=head2 ZLIBNG_VER_REVISION
-
-C<static method ZLIBNG_VER_REVISION : int ();>
-
-Returns the value of C<ZLIBNG_VER_REVISION>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
-
-=head2 ZLIBNG_VER_MODIFIED
-
-C<static method ZLIBNG_VER_MODIFIED : int ();>
-
-Returns the value of C<ZLIBNG_VER_MODIFIED>. If this constant is not defined on the system, an exception is thrown with the error id set to the basic type ID of the L<Error::NotSupported|SPVM::Error::NotSupported> class.
-
 =head2 WANT_GZIP
 
 C<static method WANT_GZIP : int ();>

@@ -68,16 +68,6 @@ class Compress::Raw::Zlib::Constant {
 
   native static method Z_VERSION_ERROR : int ();
 
-  native static method ZLIBNG_VERNUM : int ();
-
-  native static method ZLIBNG_VER_MAJOR : int ();
-
-  native static method ZLIBNG_VER_MINOR : int ();
-
-  native static method ZLIBNG_VER_REVISION : int ();
-
-  native static method ZLIBNG_VER_MODIFIED : int ();
-
   static method WANT_GZIP : int () {
     return 16;
   }
