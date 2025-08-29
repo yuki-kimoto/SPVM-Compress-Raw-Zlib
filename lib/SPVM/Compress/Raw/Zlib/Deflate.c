@@ -283,7 +283,6 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
     flush_type = Z_FINISH;
   }
   
-  int32_t status = -1;
   while (1){
     
     if (st_z_stream->avail_out == 0) {
