@@ -141,6 +141,8 @@ class Compress::Raw::Zlib::Deflate {
     return $self->{crc32};
   }
   
+  native method deflate : void ($input : string, $output_ref : string[]);
+  
   native method dict_adler : long ();
   
   native method DESTROY : void ();
@@ -150,162 +152,11 @@ class Compress::Raw::Zlib::Deflate {
 
 __END__
 
-  method deflate : void ($input, $output)
-  
   $status = $d->flush($output [, $flush_type])
 
   $status = $d->deflateParams([OPT])
 
 MODULE = Compress::Raw::Zlib PACKAGE = Compress::Raw::Zlib::deflateStream
-
-DualType
-deflate (s, buf, output)
-    Compress::Raw::Zlib::deflateStream	s
-    SV *	buf
-    SV * 	output
-    uInt	cur_length = NO_INIT
-    uInt	increment = NO_INIT
-    uInt	prefix    = NO_INIT
-    int		RETVAL = 0;
-    uLong     bufinc = NO_INIT
-    STRLEN    origlen = NO_INIT
-  CODE:
-    bufinc = s->bufsize;
-
-    /*
-    if (trace) {
-        printf("\nDEFLATE Before deRef of input buffer\n");
-        printf("\nPerl_sv_dump\n");
-        Perl_sv_dump(buf);
-        printf("\n");
-    }
-    */
-
-    /* If the input buffer is a reference, dereference it */
-    buf = deRef(buf, "deflate") ;
-
-    /* initialise the input buffer */
-#ifdef UTF8_AVAILABLE
-    if (DO_UTF8(buf) && !sv_utf8_downgrade(buf, 1))
-         croak("Wide character in Compress::Raw::Zlib::Deflate::deflate input parameter");
-#endif
-    s->stream.next_in = (Bytef*)SvPV_nomg(buf, origlen) ;
-    s->stream.avail_in = origlen;
-
-    if (trace) {
-        printf("\nDEFLATE Starts\n");
-        DispStream(s, "START");
-        /*
-        printf("\nPerl_sv_dump\n");
-        Perl_sv_dump(buf);
-        printf("\n");
-        */
-    }
-
-    if (s->flags & FLAG_CRC32)
-        s->crc32 = CRZ_crc32(s->crc32, s->stream.next_in, s->stream.avail_in) ;
-
-    if (s->flags & FLAG_ADLER32)
-        s->adler32 = CRZ_adler32(s->adler32, s->stream.next_in, s->stream.avail_in) ;
-
-    /* and retrieve the output buffer */
-    output = deRef_l(output, "deflate") ;
-#ifdef UTF8_AVAILABLE
-    if (DO_UTF8(output) && !sv_utf8_downgrade(output, 1))
-         croak("Wide character in Compress::Raw::Zlib::Deflate::deflate output parameter");
-#endif
-
-     if((s->flags & FLAG_APPEND) == FLAG_APPEND) {
-         SvOOK_off(output);
-     } else {
-         SvCUR_set(output, 0);
-     }
-    prefix = cur_length =  SvCUR(output) ;
-    s->stream.next_out = (Bytef*) SvPVX(output) + cur_length;
-    increment =  SvLEN(output) -  cur_length;
-    s->stream.avail_out =  increment;
-#ifdef SETP_BYTE
-    /* Check for saved output from deflateParams */
-    if (s->deflateParams_out_valid) {
-	*(s->stream.next_out) = s->deflateParams_out_byte;
-	++ s->stream.next_out;
-	-- s->stream.avail_out ;
-	s->deflateParams_out_valid = FALSE;
-    }
-#else
-    /* Check for saved output from deflateParams */
-    if (s->deflateParams_out_length) {
-        uLong plen = s->deflateParams_out_length ;
-        /* printf("Copy %lu bytes saved data\n", plen); */
-        if (s->stream.avail_out < plen) {
-            /* printf("GROW from %d to %lu\n", s->stream.avail_out,
-                        SvLEN(output) + plen - s->stream.avail_out);  */
-             s->stream.next_out = (Bytef*) Sv_Grow(output, SvLEN(output) + plen - s->stream.avail_out) ;
-             s->stream.next_out += cur_length;
-        }
-
-        Copy(s->deflateParams_out_buffer, s->stream.next_out, plen, Bytef) ;
-        cur_length += plen;
-        SvCUR_set(output, cur_length);
-        s->stream.next_out += plen ;
-        s->stream.avail_out = SvLEN(output) - cur_length ;
-        increment = s->stream.avail_out;
-
-        s->deflateParams_out_length = 0;
-        Safefree(s->deflateParams_out_buffer);
-        s->deflateParams_out_buffer = NULL;
-    }
-#endif
-    RETVAL = Z_OK ;
-    while (s->stream.avail_in != 0) {
-
-        if (s->stream.avail_out == 0) {
-	    /* out of space in the output buffer so make it bigger */
-            s->stream.next_out = (Bytef*) Sv_Grow(output, SvLEN(output) + bufinc) ;
-            cur_length += increment ;
-            s->stream.next_out += cur_length ;
-            increment = bufinc ;
-            s->stream.avail_out = increment;
-            bufinc *= 2 ;
-        }
-
-        if (trace) {
-          printf("DEFLATE Avail In %d, Out %d\n", s->stream.avail_in, s->stream.avail_out);
-          DispStream(s, "BEFORE");
-          /* Perl_sv_dump(output); */
-        }
-
-        RETVAL = CRZ_deflate(&(s->stream), Z_NO_FLUSH);
-        /*
-        if (RETVAL != Z_STREAM_ERROR) {
-            int done = increment -  s->stream.avail_out ;
-            printf("std DEFLATEr returned %d '%s'  avail in %d, out %d wrote %d\n", RETVAL,
-            GetErrorString(RETVAL), s->stream.avail_in, s->stream.avail_out, done);
-        }
-        */
-
-        if (trace) {
-            printf("DEFLATE returned %d %s, avail in %d, out %d\n", RETVAL,
-           GetErrorString(RETVAL), s->stream.avail_in, s->stream.avail_out);
-            DispStream(s, "AFTER");
-        }
-
-        if (RETVAL != Z_OK)
-            break;
-    }
-
-    s->compressedBytes += cur_length + increment - prefix - s->stream.avail_out ;
-    s->uncompressedBytes  += origlen - s->stream.avail_in  ;
-
-    s->last_error = RETVAL ;
-    if (RETVAL == Z_OK) {
-        SvPOK_only(output);
-        SvCUR_set(output, cur_length + increment - s->stream.avail_out) ;
-        SvSETMAGIC(output);
-    }
-    OUTPUT:
-	RETVAL
-
 
 DualType
 flush(s, output, f=Z_FINISH)
