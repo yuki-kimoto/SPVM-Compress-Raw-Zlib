@@ -70,7 +70,7 @@ class Compress::Raw::Zlib::Deflate {
       die "The value of '-Bufsize' option must be >= 1.";
     }
     
-    # MAX_WBITS is 0b1111. WANT_GZIP is 16.
+    # If the lower 4 bits of WindowBits is 0b0000, it is set to 0b1111(MAX_WBITS).
     if (($self->{WindowBits} & ZLIB->MAX_WBITS) == 0) {
       $self->{WindowBits} += ZLIB->MAX_WBITS;
     }
