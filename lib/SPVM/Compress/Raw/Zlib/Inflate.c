@@ -193,6 +193,13 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
   
   env->set_elem_object(env, stack, obj_output_ref, 0, obj_output);
   
+  int32_t used_input_length = input_length - st_z_stream->avail_in;
+  int32_t last_input_length = st_z_stream->avail_in;
+  
+  memmove(input, input + used_input_length, last_input_length);
+  
+  env->shorten(env, stack, obj_input, last_input_length);
+  
   END_OF_FUNC:
   
   if (output) {
