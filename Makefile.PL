@@ -36,8 +36,8 @@ WriteMakefile(
     resources => {
       repository => {
         type => 'git',
-        url  => '',
-        web  => '',
+        url  => 'https://github.com/yuki-kimoto/SPVM-Compress-Raw-Zlib.git',
+        web  => 'https://github.com/yuki-kimoto/SPVM-Compress-Raw-Zlib',
       },
     },
     no_index => {

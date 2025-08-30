@@ -8,52 +8,12 @@ our $VERSION = "0.001";
 
 =head1 Name
 
-SPVM::Compress::Raw::Zlib - Short Description
+SPVM::Compress::Raw::Zlib - Low-Level Interface to zlib compression library
 
 =head1 Description
 
-Compress::Raw::Zlib class in L<SPVM> has methods to do someting.
-
-=head1 Usage
-
-  use Compress::Raw::Zlib;
-
-=head1 Details
-
-
-
-=head1 Super Class
-
-
-
-=head1 Interfaces
-
-
-
-=head1 Enumerations
-
-
-
-=head1 Fields
-
-
-
-=head1 Class Methods
-
-
-
-=head1 Instance Methods
-
-
-
-=head1 Well Known Child Classes
-
-
-
-=head1 See Also
-
-
-
+Compress::Raw::Zlib class in L<SPVM> provides a Perl interface to the I<zlib>
+compression libraries.
 
 =head1 Repository
 
