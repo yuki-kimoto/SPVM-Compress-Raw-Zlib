@@ -19,8 +19,6 @@ lib/SPVM/Compress/Raw/Zlib/Deflate.c
 lib/SPVM/Compress/Raw/Zlib/Deflate.config
 lib/SPVM/Compress/Raw/Zlib/Deflate.pm
 lib/SPVM/Compress/Raw/Zlib/Deflate.spvm
-lib/SPVM/Compress/Raw/Zlib/Error/Z_BUF_ERROR.pm
-lib/SPVM/Compress/Raw/Zlib/Error/Z_BUF_ERROR.spvm
 lib/SPVM/Compress/Raw/Zlib/Inflate.c
 lib/SPVM/Compress/Raw/Zlib/Inflate.config
 lib/SPVM/Compress/Raw/Zlib/Inflate.pm
