@@ -9,8 +9,6 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
   use Compress::Raw::Zlib::Z_stream;
   
   # Undocumented Fields
-  has ConsumeInput : byte;
-  
   has LimitOutput : byte;
   
   # Class Methods
@@ -31,7 +29,6 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
       "-Dictionary",
       "-Bufsize",
       "-LimitOutput",
-      "-ConsumeInput",
     ];
     
     Fn->check_option_names($options, $option_names);
@@ -45,8 +42,6 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
     $self->{Bufsize} = $options_h->get_or_default_int("-Bufsize", 4096);
     
     $self->{LimitOutput} = (byte)$options_h->get_or_default_int("-LimitOutput", 0);
-    
-    $self->{ConsumeInput} = (byte)$options_h->get_or_default_int("-ConsumeInput", 1);
     
     unless ($self->{Bufsize} >= 1) {
       die "The value of '-Bufsize' option must be >= 1.";
@@ -62,6 +57,8 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
   }
   
   native method inflateReset : void ();
+  
+  native method inflate : void ($input : mutable string, $output_ref : string[]);
   
   native method DESTROY : void ();
   
