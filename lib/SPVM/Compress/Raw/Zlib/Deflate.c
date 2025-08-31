@@ -226,6 +226,10 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
       st_z_stream->avail_out = Bufsize;
     }
     
+    int32_t avali_in = st_z_stream->avail_in;
+    
+    int32_t avail_out = st_z_stream->avail_out;
+    
     int32_t status = deflate(st_z_stream, Z_NO_FLUSH);
     
     int32_t fatal_error = 0;
