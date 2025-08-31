@@ -245,6 +245,9 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
       goto END_OF_FUNC;
     }
     
+    int32_t avail_in_diff = avali_in - st_z_stream->avail_in;
+    
+    int32_t avail_out_diff = avail_out - st_z_stream->avail_out;
   }
   
   output_length -= st_z_stream->avail_out;
