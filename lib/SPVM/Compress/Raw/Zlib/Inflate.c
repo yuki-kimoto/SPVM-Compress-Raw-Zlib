@@ -35,7 +35,7 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate___inflateInit(SPVM_ENV* env, SPVM_VAL
     goto END_OF_FUNC;
   }
   
-  if (dictionary && dictonary_length) {
+  if (dictionary) {
     status = inflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
   }
   

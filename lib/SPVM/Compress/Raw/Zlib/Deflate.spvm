@@ -53,7 +53,7 @@ class Compress::Raw::Zlib::Deflate extends Compress::Raw::Zlib::Base {
     
     $self->{Strategy} = $options_h->get_or_default_int("-Strategy", ZLIB->Z_DEFAULT_STRATEGY);
     
-    $self->{Dictionary} = $options_h->get_or_default_string("-Dictionary", "");
+    $self->{Dictionary} = $options_h->get_or_default_string("-Dictionary", undef);
     
     $self->{Bufsize} = $options_h->get_or_default_long("-Bufsize", 4096);
     

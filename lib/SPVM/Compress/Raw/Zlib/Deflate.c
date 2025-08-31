@@ -39,7 +39,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
     dictonary_length = env->length(env, stack, obj_dictionary);
   }
   
-  z_stream* st_z_stream = NULL;
+  z_stream* st_z_stream = env->new_memory_block(env, stack, sizeof(z_stream));
   int32_t status = deflateInit2(st_z_stream, level, method, windowBits, memLevel, strategy);
   
   if (!(status == Z_OK)) {
@@ -47,7 +47,9 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
     goto END_OF_FUNC;
   }
   
-  if (dictionary && dictonary_length) {
+  int32_t z_stream_initialized = 1;
+  
+  if (dictionary) {
     status = deflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
   }
   
@@ -66,7 +68,11 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
   
   if (error_id) {
     if (st_z_stream) {
-      free(st_z_stream);
+      if (z_stream_initialized) {
+        deflateEnd(st_z_stream);
+      }
+      
+      env->free_memory_block(env, stack, st_z_stream);
       st_z_stream = NULL;
     }
   }
@@ -159,9 +165,13 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__DESTROY(SPVM_ENV* env, SPVM_VALUE* s
   void* obj_z_stream = env->get_field_object_by_name(env, stack, obj_self, "z_stream", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
   
-  z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
-  
-  deflateEnd(st_z_stream);
+  if (obj_z_stream) {
+    z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
+    
+    deflateEnd(st_z_stream);
+    
+    env->free_memory_block(env, stack, st_z_stream);
+  }
   
   END_OF_FUNC:
   

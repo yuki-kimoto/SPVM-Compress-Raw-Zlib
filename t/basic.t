@@ -18,6 +18,8 @@ my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->test);
 
+ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_small_buffer);
+
 # Version check
 {
   my $version_string = SPVM::Fn->get_version_string("Compress::Raw::Zlib");

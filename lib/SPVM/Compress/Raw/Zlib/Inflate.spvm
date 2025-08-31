@@ -37,7 +37,7 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
     
     $self->{WindowBits} = $options_h->get_or_default_int("-WindowBits", ZLIB->MAX_WBITS);
     
-    $self->{Dictionary} = $options_h->get_or_default_string("-Dictionary", "");
+    $self->{Dictionary} = $options_h->get_or_default_string("-Dictionary", undef);
     
     $self->{Bufsize} = $options_h->get_or_default_int("-Bufsize", 4096);
     
