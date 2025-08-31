@@ -152,14 +152,14 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
   int32_t status = Z_OK;
   while (1) {
     
-    if (LimitOutput) {
-      if (avail_in_diff == 0 && avail_out_diff == 0) {
-        break;
-      }
+    if (st_z_stream->avail_in == 0 && avail_out_diff == 0) {
+      break;
     }
     else {
-      if (st_z_stream->avail_in == 0 && avail_out_diff == 0) {
-        break;
+      if (LimitOutput) {
+        if (st_z_stream->avail_out == 0) {
+          break;
+        }
       }
     }
     
@@ -192,6 +192,10 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
     if (fatal_error) {
       error_id = env->die(env, stack, "[zlib Error]inflate() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
       goto END_OF_FUNC;
+    }
+    
+    if (status == Z_STREAM_END) {
+      break;
     }
     
     avail_in_diff = avali_in - st_z_stream->avail_in;
