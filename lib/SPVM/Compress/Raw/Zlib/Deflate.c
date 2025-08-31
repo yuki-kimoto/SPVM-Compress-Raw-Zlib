@@ -228,7 +228,15 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
     
     int32_t status = deflate(st_z_stream, Z_NO_FLUSH);
     
-    if (status < 0 && status != Z_BUF_ERROR) {
+    int32_t fatal_error = 0;
+    if (status == Z_NEED_DICT) {
+      fatal_error = 1;
+    }
+    else if (status < 0 && status != Z_BUF_ERROR) {
+      fatal_error = 1;
+    }
+    
+    if (fatal_error) {
       error_id = env->die(env, stack, "[zlib Error]deflate() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
       goto END_OF_FUNC;
     }
