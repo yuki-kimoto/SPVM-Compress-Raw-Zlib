@@ -146,16 +146,21 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
   st_z_stream->next_out = output;
   st_z_stream->avail_out = Bufsize;
   
-  st_z_stream->avail_out = 0;
+  int32_t avail_in_diff = st_z_stream->avail_in;
+  int32_t avail_out_diff = st_z_stream->avail_out;
+  
   int32_t status = Z_OK;
   while (1) {
     
-    if (status == Z_BUF_ERROR && st_z_stream->avail_in == 0) {
-      break;
+    if (LimitOutput) {
+      if (avail_in_diff == 0 && avail_out_diff == 0) {
+        break;
+      }
     }
-    
-    if (LimitOutput && st_z_stream->avail_out == 0) {
-      break;
+    else {
+      if (st_z_stream->avail_in == 0 && avail_out_diff == 0) {
+        break;
+      }
     }
     
     if (st_z_stream->avail_out == 0) {
@@ -169,6 +174,10 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
       st_z_stream->next_out = new_output + output_length;
       st_z_stream->avail_out = Bufsize;
     }
+    
+    int32_t avali_in = st_z_stream->avail_in;
+    
+    int32_t avail_out = st_z_stream->avail_out;
     
     status = inflate(st_z_stream, Z_SYNC_FLUSH);
     
@@ -185,6 +194,9 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
       goto END_OF_FUNC;
     }
     
+    avail_in_diff = avali_in - st_z_stream->avail_in;
+    
+    avail_out_diff = avail_out - st_z_stream->avail_out;
   }
   
   output_length -= st_z_stream->avail_out;
@@ -205,6 +217,8 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
   if (output) {
     env->free_memory_block(env, stack, output);
   }
+  
+  stack[0].ival = status;
   
   return error_id;
 }

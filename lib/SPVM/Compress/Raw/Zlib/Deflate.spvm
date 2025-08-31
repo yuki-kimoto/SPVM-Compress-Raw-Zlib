@@ -95,9 +95,9 @@ class Compress::Raw::Zlib::Deflate extends Compress::Raw::Zlib::Base {
   
   native method deflateTune : void ($good_length : int, $max_lazy : int, $nice_length : int, $max_chain : int);
   
-  native method deflate : void ($input : string, $output_ref : string[]);
+  native method deflate : int ($input : string, $output_ref : string[]);
   
-  native method flush : void ($output_ref : string[], $flush_type : int = -1);
+  native method flush : int ($output_ref : string[], $flush_type : int = -1);
   
   native method DESTROY : void ();
   

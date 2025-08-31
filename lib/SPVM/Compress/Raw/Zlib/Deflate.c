@@ -208,6 +208,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
   st_z_stream->next_out = output;
   st_z_stream->avail_out = Bufsize;
   
+  int32_t status = Z_OK;
   while (1) {
     
     if (st_z_stream->avail_in == 0) {
@@ -226,7 +227,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
       st_z_stream->avail_out = Bufsize;
     }
     
-    int32_t status = deflate(st_z_stream, Z_NO_FLUSH);
+    status = deflate(st_z_stream, Z_NO_FLUSH);
     
     int32_t fatal_error = 0;
     if (status == Z_NEED_DICT) {
@@ -253,6 +254,8 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
   if (output) {
     env->free_memory_block(env, stack, output);
   }
+  
+  stack[0].ival = status;
   
   return error_id;
 }
@@ -290,6 +293,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
     flush_type = Z_FINISH;
   }
   
+  int32_t status = Z_OK;
   while (1){
     
     if (st_z_stream->avail_out == 0) {
@@ -304,7 +308,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
       st_z_stream->avail_out = Bufsize;
     }
     
-    int32_t status = deflate(st_z_stream, flush_type);
+    status = deflate(st_z_stream, flush_type);
     
     int32_t fatal_error = 0;
     if (status == Z_NEED_DICT) {
@@ -335,6 +339,8 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
   if (output) {
     env->free_memory_block(env, stack, output);
   }
+  
+  stack[0].ival = status;
   
   return error_id;
 }

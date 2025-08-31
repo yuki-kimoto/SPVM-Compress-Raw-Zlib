@@ -58,7 +58,7 @@ class Compress::Raw::Zlib::Inflate extends Compress::Raw::Zlib::Base {
   
   native method inflateReset : void ();
   
-  native method inflate : void ($input : mutable string, $output_ref : string[]);
+  native method inflate : int ($input : mutable string, $output_ref : string[]);
   
   native method DESTROY : void ();
   
