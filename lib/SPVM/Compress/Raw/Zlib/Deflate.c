@@ -304,18 +304,21 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
       st_z_stream->avail_out = Bufsize;
     }
     
-    int32_t avail_out =  st_z_stream->avail_out;
-    
     int32_t status = deflate(st_z_stream, flush_type);
     
-    if (status < 0 && status != Z_BUF_ERROR) {
+    int32_t fatal_error = 0;
+    if (status == Z_NEED_DICT) {
+      fatal_error = 1;
+    }
+    else if (status < 0 && status != Z_BUF_ERROR) {
+      fatal_error = 1;
+    }
+    
+    if (fatal_error) {
       error_id = env->die(env, stack, "[zlib Error]deflate() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
       goto END_OF_FUNC;
     }
     
-    /* deflate has finished flushing only when it hasn't used up
-     * all the available space in the output buffer:
-     */
     if (st_z_stream->avail_out != 0) {
       break;
     }
