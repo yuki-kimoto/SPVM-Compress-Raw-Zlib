@@ -30,7 +30,7 @@ class TestCase::Compress::Raw::Zlib {
       
       my $ch = Fn->chr($data->[$i]);
       
-      my $status = $deflate->deflate($ch, my $_ = [(string)undef]);
+      $deflate->deflate($ch, my $_ = [(string)undef]);
       
       if (length $_->[0]) {
         $compressed_data .= $_->[0];
