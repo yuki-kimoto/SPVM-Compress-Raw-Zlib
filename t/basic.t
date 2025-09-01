@@ -30,7 +30,7 @@ ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_rfc1951);
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_fields);
 
-ok(SPVM::TestCase::Compress::Raw::Zlib->deflateReset);
+ok(SPVM::TestCase::Compress::Raw::Zlib->deflateReset_and_inflateReset);
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->deflateTune);
 

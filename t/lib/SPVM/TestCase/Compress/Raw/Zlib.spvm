@@ -607,7 +607,7 @@ class TestCase::Compress::Raw::Zlib {
     return 1;
   }
   
-  static method deflateReset : int () {
+  static method deflateReset_and_inflateReset : int () {
     
     {
       my $data = "I am a HAL 9000 computer";
@@ -664,6 +664,12 @@ class TestCase::Compress::Raw::Zlib {
       
       {
         my $inflate = Compress::Raw::Zlib::Inflate->new;
+        
+        my $compressed_data_tmp = (mutable string)copy $compressed_data;
+        
+        $inflate->inflate($compressed_data_tmp, my $_ = [(string)undef]);
+        
+        $inflate->inflateReset;
         
         unless ($inflate->total_in == 0) {
           return 0;
