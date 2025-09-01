@@ -75,7 +75,19 @@ class TestCase::Compress::Raw::Zlib {
           
           my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
           
+          my $total_in_start = $inflate->total_in;
+          
+          my $ch_length_start = length $ch;
+          
           $inflate->inflate($ch, my $_ = [(string)undef]);
+          
+          my $total_in_diff = $inflate->total_in - $total_in_start;
+          
+          my $ch_length_diff = $ch_length_start - length $ch;
+          
+          unless ($total_in_diff == $ch_length_diff) {
+            return 0;
+          }
           
           if (length $_->[0]) {
             $uncompressed_data .= $_->[0];
