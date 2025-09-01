@@ -49,6 +49,14 @@ class TestCase::Compress::Raw::Zlib {
         return 0;
       }
       
+      # zlib format
+      unless ($compressed_data->[0] == (byte)0x78) {
+        return 0;
+      }
+      unless ($compressed_data->[1] == (byte)0x9C) {
+        return 0;
+      }
+      
       {
         my $inflate = Compress::Raw::Zlib::Inflate->new;
         
@@ -229,6 +237,14 @@ class TestCase::Compress::Raw::Zlib {
         }
         
         my $compressed_data = (mutable string)copy $compressed_data;
+        
+        # GZIP format
+        unless ($compressed_data->[0] == (byte)0x1f) {
+          return 0;
+        }
+        unless ($compressed_data->[1] == (byte)0x8b) {
+          return 0;
+        }
         
         my $uncompressed_data = "";
         for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
