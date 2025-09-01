@@ -6,7 +6,7 @@ class TestCase::Compress::Raw::Zlib {
   
   use Fn;
   
-  static method deflate_basic : int () {
+  static method deflate_and_inflate_basic : int () {
     
     {
       my $data = "I am a HAL 9000 computer";
@@ -91,7 +91,7 @@ class TestCase::Compress::Raw::Zlib {
     return 1;
   }
   
-  static method deflate_small_buffer : int () {
+  static method deflate_and_inflate_small_buffer : int () {
     
     for (my $bufsize = 1; $bufsize <= 2; $bufsize++) {
       my $data = "I am a HAL 9000 computer";
