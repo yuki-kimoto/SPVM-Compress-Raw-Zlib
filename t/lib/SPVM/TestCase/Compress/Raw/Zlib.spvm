@@ -289,6 +289,7 @@ class TestCase::Compress::Raw::Zlib {
   
   static method deflate_and_inflate_dictionary : int () {
     
+    # RFC 1950 (zlib format):
     {
       my $data = "I am a HAL 9000 computer";
       
@@ -323,6 +324,67 @@ class TestCase::Compress::Raw::Zlib {
       {
         my $inflate_options = {
           Dictionary => $dictionary,
+        };
+        
+        my $inflate = Compress::Raw::Zlib::Inflate->new($inflate_options);
+        
+        my $compressed_data = (mutable string)copy $compressed_data;
+        
+        my $uncompressed_data = "";
+        for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
+          
+          my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
+          
+          $inflate->inflate($ch, my $_ = [(string)undef]);
+          
+          if (length $_->[0]) {
+            $uncompressed_data .= $_->[0];
+          }
+        }
+        
+        unless ($uncompressed_data eq $data) {
+          return 0;
+        }
+      }
+    }
+    
+    # RFC 1951 (raw DEFLATE format):
+    {
+      my $data = "I am a HAL 9000 computer";
+      
+      my $read_length = 4;
+      
+      my $dictionary = "hello";
+      
+      my $deflate_options = {
+        Dictionary => $dictionary,
+        WindowBits => -ZLIB->MAX_WBITS,
+      };
+      
+      my $deflate = Compress::Raw::Zlib::Deflate->new($deflate_options);
+      
+      my $compressed_data = "";
+      for (my $i = 0; $i < length $data; $i += $read_length) {
+        
+        my $ch = Fn->substr($data, $i, $read_length);
+        
+        $deflate->deflate($ch, my $_ = [(string)undef]);
+        
+        if (length $_->[0]) {
+          $compressed_data .= $_->[0];
+        }
+      }
+      
+      $deflate->flush(my $_ = [(string)undef]);
+      
+      if (length $_->[0]) {
+        $compressed_data .= $_->[0];
+      }
+      
+      {
+        my $inflate_options = {
+          Dictionary => $dictionary,
+          WindowBits => -ZLIB->MAX_WBITS,
         };
         
         my $inflate = Compress::Raw::Zlib::Inflate->new($inflate_options);
