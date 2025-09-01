@@ -71,6 +71,7 @@ class TestCase::Compress::Raw::Zlib {
         my $compressed_data = (mutable string)copy $compressed_data;
         
         my $uncompressed_data = "";
+        my $status = ZLIB->Z_OK;
         for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
           
           my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
@@ -79,7 +80,7 @@ class TestCase::Compress::Raw::Zlib {
           
           my $ch_length_start = length $ch;
           
-          $inflate->inflate($ch, my $_ = [(string)undef]);
+          $status = $inflate->inflate($ch, my $_ = [(string)undef]);
           
           my $total_in_diff = $inflate->total_in - $total_in_start;
           
@@ -99,6 +100,10 @@ class TestCase::Compress::Raw::Zlib {
         }
         
         unless ($inflate->total_out == length $uncompressed_data) {
+          return 0;
+        }
+        
+        unless ($status == ZLIB->Z_STREAM_END) {
           return 0;
         }
         
@@ -866,18 +871,23 @@ class TestCase::Compress::Raw::Zlib {
         my $compressed_data = (mutable string)copy $compressed_data;
         
         my $uncompressed_data = "";
+        my $status = ZLIB->Z_OK;
         for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
           
           my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
           
           while (length $ch) {
-            $inflate->inflate($ch, my $_ = [(string)undef]);
+            $status = $inflate->inflate($ch, my $_ = [(string)undef]);
             
             if (length $_->[0]) {
               $uncompressed_data .= $_->[0];
             }
           }
           
+        }
+        
+        unless ($status == ZLIB->Z_STREAM_END) {
+          return 0;
         }
         
         unless ($uncompressed_data eq $data) {
