@@ -20,6 +20,7 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate___inflateInit(SPVM_ENV* env, SPVM_VAL
   
   void* obj_dictionary = env->get_field_string_by_name(env, stack, obj_self, "Dictionary", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
+  
   const char* dictionary = NULL;
   int32_t dictonary_length = 0;
   if (obj_dictionary) {
@@ -27,13 +28,15 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate___inflateInit(SPVM_ENV* env, SPVM_VAL
     dictonary_length = env->length(env, stack, obj_dictionary);
   }
   
-  z_stream* st_z_stream = NULL;
+  z_stream* st_z_stream = env->new_memory_block(env, stack, sizeof(z_stream));
   int32_t status = inflateInit2(st_z_stream, windowBits);
   
   if (!(status == Z_OK)) {
     error_id = env->die(env, stack, "[zlib Error]inflateInit2() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
     goto END_OF_FUNC;
   }
+  
+  int32_t z_stream_initialized = 1;
   
   if (dictionary) {
     status = inflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
@@ -54,7 +57,11 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate___inflateInit(SPVM_ENV* env, SPVM_VAL
   
   if (error_id) {
     if (st_z_stream) {
-      free(st_z_stream);
+      if (z_stream_initialized) {
+        deflateEnd(st_z_stream);
+      }
+      
+      env->free_memory_block(env, stack, st_z_stream);
       st_z_stream = NULL;
     }
   }
@@ -94,9 +101,13 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__DESTROY(SPVM_ENV* env, SPVM_VALUE* s
   void* obj_z_stream = env->get_field_object_by_name(env, stack, obj_self, "z_stream", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
   
-  z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
-  
-  inflateEnd(st_z_stream);
+  if (obj_z_stream) {
+    z_stream* st_z_stream = env->get_pointer(env, stack, obj_z_stream);
+    
+    inflateEnd(st_z_stream);
+    
+    env->free_memory_block(env, stack, st_z_stream);
+  }
   
   END_OF_FUNC:
   
