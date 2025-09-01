@@ -32,12 +32,6 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
   
   void* obj_dictionary = env->get_field_string_by_name(env, stack, obj_self, "Dictionary", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
-  const char* dictionary = NULL;
-  int32_t dictonary_length = 0;
-  if (obj_dictionary) {
-    dictionary = env->get_chars(env, stack, obj_dictionary);
-    dictonary_length = env->length(env, stack, obj_dictionary);
-  }
   
   z_stream* st_z_stream = env->new_memory_block(env, stack, sizeof(z_stream));
   int32_t status = deflateInit2(st_z_stream, level, method, windowBits, memLevel, strategy);
@@ -49,7 +43,13 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate___deflateInit(SPVM_ENV* env, SPVM_VAL
   
   int32_t z_stream_initialized = 1;
   
-  if (dictionary) {
+  if (obj_dictionary) {
+    const char* dictionary = NULL;
+    int32_t dictonary_length = 0;
+    if (obj_dictionary) {
+      dictionary = env->get_chars(env, stack, obj_dictionary);
+      dictonary_length = env->length(env, stack, obj_dictionary);
+    }
     status = deflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
   }
   

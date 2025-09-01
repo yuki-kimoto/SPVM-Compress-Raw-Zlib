@@ -21,13 +21,6 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate___inflateInit(SPVM_ENV* env, SPVM_VAL
   void* obj_dictionary = env->get_field_string_by_name(env, stack, obj_self, "Dictionary", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
   
-  const char* dictionary = NULL;
-  int32_t dictonary_length = 0;
-  if (obj_dictionary) {
-    dictionary = env->get_chars(env, stack, obj_dictionary);
-    dictonary_length = env->length(env, stack, obj_dictionary);
-  }
-  
   z_stream* st_z_stream = env->new_memory_block(env, stack, sizeof(z_stream));
   int32_t status = inflateInit2(st_z_stream, windowBits);
   
@@ -38,13 +31,22 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate___inflateInit(SPVM_ENV* env, SPVM_VAL
   
   int32_t z_stream_initialized = 1;
   
-  if (dictionary) {
-    status = inflateSetDictionary(st_z_stream, (const Bytef*) dictionary, dictonary_length);
-  }
-  
-  if (!(status == Z_OK)) {
-    error_id = env->die(env, stack, "[zlib Error]inflateSetDictionary() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
-    goto END_OF_FUNC;
+  if (obj_dictionary) {
+    if (windowBits < 0) {
+      const char* dictionary = NULL;
+      int32_t dictonary_length = 0;
+      if (obj_dictionary) {
+        dictionary = env->get_chars(env, stack, obj_dictionary);
+        dictonary_length = env->length(env, stack, obj_dictionary);
+      }
+      
+      status = inflateSetDictionary(st_z_stream, (const Bytef*)dictionary, dictonary_length);
+    }
+    
+    if (!(status == Z_OK)) {
+      error_id = env->die(env, stack, "[zlib Error]inflateSetDictionary() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
+      goto END_OF_FUNC;
+    }
   }
   
   void* obj_z_stream = env->new_pointer_object_by_name(env, stack, "Compress::Raw::Zlib::Z_stream", st_z_stream, &error_id, __func__, FILE_NAME, __LINE__);
@@ -195,7 +197,27 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
     
     int32_t fatal_error = 0;
     if (status == Z_NEED_DICT) {
-      fatal_error = 1;
+      void* obj_dictionary = env->get_field_string_by_name(env, stack, obj_self, "Dictionary", &error_id, __func__, FILE_NAME, __LINE__);
+      if (error_id) { goto END_OF_FUNC; }
+      
+      if (obj_dictionary) {
+        const char* dictionary = NULL;
+        int32_t dictonary_length = 0;
+        if (obj_dictionary) {
+          dictionary = env->get_chars(env, stack, obj_dictionary);
+          dictonary_length = env->length(env, stack, obj_dictionary);
+        }
+        
+        status = inflateSetDictionary(st_z_stream, (const Bytef*)dictionary, dictonary_length);
+        
+        if (!(status == Z_OK)) {
+          error_id = env->die(env, stack, "[zlib Error]inflateSetDictionary() failed(status:%d).", status, __func__, FILE_NAME, __LINE__);
+          goto END_OF_FUNC;
+        }
+      }
+      else {
+        fatal_error = 1;
+      }
     }
     else if (status < 0 && status != Z_BUF_ERROR) {
       fatal_error = 1;

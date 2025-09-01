@@ -22,6 +22,8 @@ ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_small_buffer);
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_WANT_GZIP);
 
+ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_dictionary);
+
 # Version check
 {
   my $version_string = SPVM::Fn->get_version_string("Compress::Raw::Zlib");
