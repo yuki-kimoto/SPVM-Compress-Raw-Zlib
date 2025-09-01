@@ -30,19 +30,17 @@ class TestCase::Compress::Raw::Zlib {
       
       my $ch = Fn->chr($hello->[$i]);
       
-      my $output_ref = [(string)undef];
-      my $status = $deflate->deflate($ch, $output_ref);
+      my $status = $deflate->deflate($ch, my $_ = [(string)undef]);
       
-      if (length $output_ref->[0]) {
-        $output_all .= $output_ref->[0];
+      if (length $_->[0]) {
+        $output_all .= $_->[0];
       }
     }
     
-    my $output_ref = [(string)undef];
-    $deflate->flush($output_ref);
+    $deflate->flush(my $_ = [(string)undef]);
     
-    if (length $output_ref->[0]) {
-      $output_all .= $output_ref->[0];
+    if (length $_->[0]) {
+      $output_all .= $_->[0];
     }
     
     unless ($deflate->total_in == length $hello) {
