@@ -13,7 +13,7 @@ class TestCase::Compress::Raw::Zlib {
   
   static method deflate_small_buffer : int () {
     
-    my $hello = "I am a HAL 9000 computer";
+    my $data = "I am a HAL 9000 computer";
     
     my $deflate = Compress::Raw::Zlib::Deflate->new({"-Bufsize" => 1});
     
@@ -25,29 +25,29 @@ class TestCase::Compress::Raw::Zlib {
       return 0;
     }
     
-    my $output_all = "";
-    for (my $i = 0; $i < length $hello; $i++) {
+    my $compressed_data = "";
+    for (my $i = 0; $i < length $data; $i++) {
       
-      my $ch = Fn->chr($hello->[$i]);
+      my $ch = Fn->chr($data->[$i]);
       
       my $status = $deflate->deflate($ch, my $_ = [(string)undef]);
       
       if (length $_->[0]) {
-        $output_all .= $_->[0];
+        $compressed_data .= $_->[0];
       }
     }
     
     $deflate->flush(my $_ = [(string)undef]);
     
     if (length $_->[0]) {
-      $output_all .= $_->[0];
+      $compressed_data .= $_->[0];
     }
     
-    unless ($deflate->total_in == length $hello) {
+    unless ($deflate->total_in == length $data) {
       return 0;
     }
     
-    unless ($deflate->total_out == length $output_all) {
+    unless ($deflate->total_out == length $compressed_data) {
       return 0;
     }
     
