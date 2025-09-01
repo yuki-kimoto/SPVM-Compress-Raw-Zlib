@@ -173,4 +173,90 @@ class TestCase::Compress::Raw::Zlib {
     
     return 1;
   }
+  
+  static method deflate_and_inflate_WANT_GZIP : int () {
+    
+    {
+      my $data = "I am a HAL 9000 computer";
+      
+      my $read_length = 4;
+      
+      my $deflate = Compress::Raw::Zlib::Deflate->new({"-WindowBits" => ZLIB->WANT_GZIP});
+      
+      unless ($deflate->total_in == 0) {
+        return 0;
+      }
+      
+      unless ($deflate->total_out == 0) {
+        return 0;
+      }
+      
+      my $compressed_data = "";
+      for (my $i = 0; $i < length $data; $i += $read_length) {
+        
+        my $ch = Fn->substr($data, $i, $read_length);
+        
+        $deflate->deflate($ch, my $_ = [(string)undef]);
+        
+        if (length $_->[0]) {
+          $compressed_data .= $_->[0];
+        }
+      }
+      
+      $deflate->flush(my $_ = [(string)undef]);
+      
+      if (length $_->[0]) {
+        $compressed_data .= $_->[0];
+      }
+      
+      unless ($deflate->total_in == length $data) {
+        return 0;
+      }
+      
+      unless ($deflate->total_out == length $compressed_data) {
+        return 0;
+      }
+      
+      {
+        my $inflate = Compress::Raw::Zlib::Inflate->new({"-WindowBits" => ZLIB->WANT_GZIP});
+        
+        unless ($inflate->total_in == 0) {
+          return 0;
+        }
+        
+        unless ($inflate->total_out == 0) {
+          return 0;
+        }
+        
+        my $compressed_data = (mutable string)copy $compressed_data;
+        
+        my $uncompressed_data = "";
+        for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
+          
+          my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
+          
+          $inflate->inflate($ch, my $_ = [(string)undef]);
+          
+          if (length $_->[0]) {
+            $uncompressed_data .= $_->[0];
+          }
+        }
+        
+        unless ($inflate->total_in == length $compressed_data) {
+          return 0;
+        }
+        
+        unless ($inflate->total_out == length $uncompressed_data) {
+          return 0;
+        }
+        
+        unless ($uncompressed_data eq $data) {
+          return 0;
+        }
+      }
+    }
+    
+    return 1;
+  }
+  
 }
