@@ -30,6 +30,8 @@ ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_rfc1951);
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_fields);
 
+ok(SPVM::TestCase::Compress::Raw::Zlib->deflateReset);
+
 # Version check
 {
   my $version_string = SPVM::Fn->get_version_string("Compress::Raw::Zlib");
