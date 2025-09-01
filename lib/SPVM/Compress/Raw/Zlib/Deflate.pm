@@ -12,7 +12,7 @@ SPVM::Compress::Raw::Zlib::Deflate - Low-Level Interface to zlib inflate
 
 =head1 Description
 
-Compress::Raw::Zlib::Deflate class in L<SPVM> is low-level interface to L<zlib|https://en.wikipedia.org/wiki/Zlib> C<inflate> function.
+Compress::Raw::Zlib::Deflate class in L<SPVM> is a low-level interface to L<zlib|https://en.wikipedia.org/wiki/Zlib> C<inflate> function.
 
 =head1 Usage
 
@@ -84,6 +84,8 @@ The initial size for the output buffer.
 
 =back
 
+See L<Compress::Raw::Zlib::Constant|SPVM::Compress::Raw::Zlib::Constant> about C<zlib> constants.
+
 =head1 Instance Methods
 
 =head2 deflate
@@ -99,6 +101,8 @@ Returns the C<zlib> status of the last C<inflate> call.
 C<method flush : int ($output_ref : string[], $flush_type : int = -1);>
 
 Typically used to finish the deflation.
+
+If $flush_type is a negative value, it is set to C<Z_FINISH>.
 
 Returns the C<zlib> status of the last C<inflate> call.
 
