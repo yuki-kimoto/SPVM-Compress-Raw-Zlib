@@ -105,6 +105,10 @@ class Compress::Raw::Zlib::Deflate extends Compress::Raw::Zlib::Base {
     return $self->{Strategy};
   }
   
+  method get_Level : int () {
+    return $self->{Level};
+  }
+  
   private native method _deflateInit : void ();
   
   private native method _deflateParams : void ();
