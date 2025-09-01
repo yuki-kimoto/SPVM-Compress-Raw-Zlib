@@ -96,7 +96,7 @@ class TestCase::Compress::Raw::Zlib {
     for (my $bufsize = 1; $bufsize <= 2; $bufsize++) {
       my $data = "I am a HAL 9000 computer";
       
-      my $deflate = Compress::Raw::Zlib::Deflate->new({"-Bufsize" => $bufsize});
+      my $deflate = Compress::Raw::Zlib::Deflate->new({Bufsize => $bufsize});
       
       unless ($deflate->total_in == 0) {
         return 0;
@@ -133,7 +133,7 @@ class TestCase::Compress::Raw::Zlib {
       }
       
       {
-        my $inflate = Compress::Raw::Zlib::Inflate->new({"-Bufsize" => 1});
+        my $inflate = Compress::Raw::Zlib::Inflate->new({Bufsize => 1});
         
         unless ($inflate->total_in == 0) {
           return 0;
@@ -181,7 +181,7 @@ class TestCase::Compress::Raw::Zlib {
       
       my $read_length = 4;
       
-      my $deflate = Compress::Raw::Zlib::Deflate->new({"-WindowBits" => ZLIB->WANT_GZIP});
+      my $deflate = Compress::Raw::Zlib::Deflate->new({WindowBits => ZLIB->WANT_GZIP});
       
       unless ($deflate->total_in == 0) {
         return 0;
@@ -218,7 +218,7 @@ class TestCase::Compress::Raw::Zlib {
       }
       
       {
-        my $inflate = Compress::Raw::Zlib::Inflate->new({"-WindowBits" => ZLIB->WANT_GZIP});
+        my $inflate = Compress::Raw::Zlib::Inflate->new({WindowBits => ZLIB->WANT_GZIP});
         
         unless ($inflate->total_in == 0) {
           return 0;
