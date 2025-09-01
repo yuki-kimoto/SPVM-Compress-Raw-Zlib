@@ -132,12 +132,11 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflateTune(SPVM_ENV* env, SPVM_VALU
   
   int32_t error_id = 0;
   
-  int good_length = stack[0].ival;
-  int max_lazy = stack[1].ival;
-  int nice_length = stack[2].ival;
-  int max_chain = stack[3].ival;
-  
   void* obj_self = stack[0].oval;
+  int good_length = stack[1].ival;
+  int max_lazy = stack[2].ival;
+  int nice_length = stack[3].ival;
+  int max_chain = stack[4].ival;
   
   void* obj_z_stream = env->get_field_object_by_name(env, stack, obj_self, "z_stream", &error_id, __func__, FILE_NAME, __LINE__);
   if (error_id) { goto END_OF_FUNC; }
