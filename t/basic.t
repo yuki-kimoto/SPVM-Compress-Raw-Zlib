@@ -16,7 +16,7 @@ my $api = SPVM::api();
 
 my $start_memory_blocks_count = $api->get_memory_blocks_count;
 
-ok(SPVM::TestCase::Compress::Raw::Zlib->test);
+ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_basic);
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_small_buffer);
 
