@@ -11,6 +11,8 @@ class TestCase::Compress::Raw::Zlib {
     {
       my $data = "I am a HAL 9000 computer";
       
+      my $read_length = 4;
+      
       my $deflate = Compress::Raw::Zlib::Deflate->new;
       
       unless ($deflate->total_in == 0) {
@@ -22,9 +24,9 @@ class TestCase::Compress::Raw::Zlib {
       }
       
       my $compressed_data = "";
-      for (my $i = 0; $i < length $data; $i++) {
+      for (my $i = 0; $i < length $data; $i += $read_length) {
         
-        my $ch = Fn->substr($data, $i, 1);
+        my $ch = Fn->substr($data, $i, $read_length);
         
         $deflate->deflate($ch, my $_ = [(string)undef]);
         
@@ -48,7 +50,7 @@ class TestCase::Compress::Raw::Zlib {
       }
       
       {
-        my $inflate = Compress::Raw::Zlib::Inflate->new({"-Bufsize" => 1});
+        my $inflate = Compress::Raw::Zlib::Inflate->new;
         
         unless ($inflate->total_in == 0) {
           return 0;
@@ -61,9 +63,9 @@ class TestCase::Compress::Raw::Zlib {
         my $compressed_data = (mutable string)copy $compressed_data;
         
         my $uncompressed_data = "";
-        for (my $i = 0; $i < length $compressed_data; $i++) {
+        for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
           
-          my $ch = (mutable string)Fn->substr($compressed_data, $i, 1);
+          my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
           
           $inflate->inflate($ch, my $_ = [(string)undef]);
           
