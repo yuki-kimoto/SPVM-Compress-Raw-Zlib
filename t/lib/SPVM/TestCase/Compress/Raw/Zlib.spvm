@@ -28,7 +28,7 @@ class TestCase::Compress::Raw::Zlib {
     my $compressed_data = "";
     for (my $i = 0; $i < length $data; $i++) {
       
-      my $ch = Fn->chr($data->[$i]);
+      my $ch = Fn->substr($data, $i, 1);
       
       $deflate->deflate($ch, my $_ = [(string)undef]);
       
@@ -53,8 +53,7 @@ class TestCase::Compress::Raw::Zlib {
     
     {
       my $inflate = Compress::Raw::Zlib::Inflate->new({"-Bufsize" => 1});
-
-=pod
+      
       unless ($inflate->total_in == 0) {
         return 0;
       }
@@ -68,7 +67,7 @@ class TestCase::Compress::Raw::Zlib {
       my $uncompressed_data = "";
       for (my $i = 0; $i < length $compressed_data; $i++) {
         
-        my $ch = (mutable string)Fn->chr($data->[$i]);
+        my $ch = (mutable string)Fn->substr($compressed_data, $i, 1);
         
         $inflate->inflate($ch, my $_ = [(string)undef]);
         
@@ -88,10 +87,6 @@ class TestCase::Compress::Raw::Zlib {
       unless ($uncompressed_data eq $data) {
         return 0;
       }
-    }
-
-=cut
-    
     }
     
     return 1;
