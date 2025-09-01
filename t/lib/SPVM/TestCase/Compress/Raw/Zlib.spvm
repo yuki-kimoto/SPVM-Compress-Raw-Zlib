@@ -360,7 +360,9 @@ class TestCase::Compress::Raw::Zlib {
       my $dictionary = "hello";
       
       my $deflate_options = {
-        Level => ZLIB->Z_BEST_COMPRESSION
+        Level => ZLIB->Z_BEST_COMPRESSION,
+        MemLevel => 1,
+        Strategy => ZLIB->Z_HUFFMAN_ONLY,
       };
       
       my $deflate = Compress::Raw::Zlib::Deflate->new($deflate_options);
