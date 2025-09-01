@@ -829,5 +829,65 @@ class TestCase::Compress::Raw::Zlib {
     return 1;
   }
   
+  static method deflate_and_inflate_LimitOutput : int () {
+    
+    my $data = Fn->repeat("I am a HAL 9000 computer", 2001);
+    
+    my $bufsizes = [1, 2, 3, 13, 4096, 1024*10];
+    for (my $i = 0; $i < @$bufsizes; $i++) {
+      
+      my $bufsize = $bufsizes->[$i];
+      
+      my $deflate = Compress::Raw::Zlib::Deflate->new({Bufsize => $bufsize});
+      
+      my $read_length = $bufsize;
+      
+      my $compressed_data = "";
+      for (my $i = 0; $i < length $data; $i += $read_length) {
+        
+        my $ch = Fn->substr($data, $i, $read_length);
+        
+        $deflate->deflate($ch, my $_ = [(string)undef]);
+        
+        if (length $_->[0]) {
+          $compressed_data .= $_->[0];
+        }
+      }
+      
+      $deflate->flush(my $_ = [(string)undef]);
+      
+      if (length $_->[0]) {
+        $compressed_data .= $_->[0];
+      }
+      
+      {
+        my $inflate = Compress::Raw::Zlib::Inflate->new({Bufsize => $bufsize, LimitOutput => 1});
+        
+        my $compressed_data = (mutable string)copy $compressed_data;
+        
+        my $uncompressed_data = "";
+        for (my $i = 0; $i < length $compressed_data; $i += $read_length) {
+          
+          my $ch = (mutable string)Fn->substr($compressed_data, $i, $read_length);
+          
+          while (length $ch) {
+            $inflate->inflate($ch, my $_ = [(string)undef]);
+            
+            if (length $_->[0]) {
+              $uncompressed_data .= $_->[0];
+            }
+          }
+          
+        }
+        
+        unless ($uncompressed_data eq $data) {
+          return 0;
+        }
+      }
+    }
+    
+    return 1;
+  }
+  
   
 }

@@ -207,10 +207,6 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
       goto END_OF_FUNC;
     }
     
-    if (status == Z_STREAM_END) {
-      break;
-    }
-    
     avail_in_diff = avali_in - st_z_stream->avail_in;
     
     avail_out_diff = avail_out - st_z_stream->avail_out;
