@@ -235,6 +235,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__deflate(SPVM_ENV* env, SPVM_VALUE* s
       
       st_z_stream->next_out = new_output + output_length;
       st_z_stream->avail_out = Bufsize;
+      output_length = new_output_length;
     }
     
     status = deflate(st_z_stream, Z_NO_FLUSH);
@@ -316,6 +317,7 @@ int32_t SPVM__Compress__Raw__Zlib__Deflate__flush(SPVM_ENV* env, SPVM_VALUE* sta
       
       st_z_stream->next_out = new_output + output_length;
       st_z_stream->avail_out = Bufsize;
+      output_length = new_output_length;
     }
     
     status = deflate(st_z_stream, flush_type);

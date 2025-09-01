@@ -1,6 +1,6 @@
 class TestCase::Compress::Raw::Zlib {
   use Compress::Raw::Zlib;
-  use Compress::Raw::Zlib::Constant;
+  use Compress::Raw::Zlib::Constant as ZLIB;
   use Compress::Raw::Zlib::Deflate;
   use Compress::Raw::Zlib::Inflate;
   
@@ -15,13 +15,41 @@ class TestCase::Compress::Raw::Zlib {
     
     my $hello = "I am a HAL 9000 computer";
     
-    my $x = Compress::Raw::Zlib::Deflate->new({"-Bufsize" => 1});
+    my $deflate = Compress::Raw::Zlib::Deflate->new({"-Bufsize" => 1});
     
-    unless ($x->total_in == 0) {
+    unless ($deflate->total_in == 0) {
       return 0;
     }
     
-    unless ($x->total_out == 0) {
+    unless ($deflate->total_out == 0) {
+      return 0;
+    }
+    
+    my $output_all = "";
+    for (my $i = 0; $i < length $hello; $i++) {
+      
+      my $ch = Fn->chr($hello->[$i]);
+      
+      my $output_ref = [(string)undef];
+      my $status = $deflate->deflate($ch, $output_ref);
+      
+      if (length $output_ref->[0]) {
+        $output_all .= $output_ref->[0];
+      }
+    }
+    
+    my $output_ref = [(string)undef];
+    $deflate->flush($output_ref);
+    
+    if (length $output_ref->[0]) {
+      $output_all .= $output_ref->[0];
+    }
+    
+    unless ($deflate->total_in == length $hello) {
+      return 0;
+    }
+    
+    unless ($deflate->total_out == length $output_all) {
       return 0;
     }
     
