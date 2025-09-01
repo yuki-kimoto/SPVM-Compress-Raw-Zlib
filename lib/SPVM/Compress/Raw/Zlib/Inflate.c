@@ -173,6 +173,7 @@ int32_t SPVM__Compress__Raw__Zlib__Inflate__inflate(SPVM_ENV* env, SPVM_VALUE* s
       
       st_z_stream->next_out = new_output + output_length;
       st_z_stream->avail_out = Bufsize;
+      output_length = new_output_length;
     }
     
     int32_t avali_in = st_z_stream->avail_in;
