@@ -19,6 +19,18 @@ B<WARNINGS:>
 
 B<This distribution has a significantly incomplete implementation and hasn't been tested at all, and is completely undocumented.>
 
+=head1 Classes
+
+=over 2
+
+=item * L<Compress::Raw::Zlib::Deflate|SPVM::Compress::Raw::Zlib::Deflate>
+
+=item * L<Compress::Raw::Zlib::Inflate|SPVM::Compress::Raw::Zlib::Inflate>
+
+=item * L<Compress::Raw::Zlib::Constant|SPVM::Compress::Raw::Zlib::Constant>
+
+=back
+
 =head1 Repository
 
 L<SPVM::Compress::Raw::Zlib - Github|https://github.com/yuki-kimoto/SPVM-Compress-Raw-Zlib>
