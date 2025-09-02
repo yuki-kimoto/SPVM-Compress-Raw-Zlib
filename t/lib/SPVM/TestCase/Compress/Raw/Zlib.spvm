@@ -1025,4 +1025,61 @@ class TestCase::Compress::Raw::Zlib {
     return 1;
   }
   
+  static method gzip_and_gunzip : int () {
+    
+    {
+      my $data = "I am a HAL 9000 computer";
+      
+      my $output_ref = [(string)undef];
+      Compress::Raw::Zlib->gzip($data, $output_ref);
+      my $compressed_data = $output_ref->[0];
+      
+      {
+        # GZIP format
+        unless ($compressed_data->[0] == (byte)0x1f) {
+          return 0;
+        }
+        unless ($compressed_data->[1] == (byte)0x8b) {
+          return 0;
+        }
+        
+        my $output_ref = [(string)undef];
+        Compress::Raw::Zlib->gunzip($compressed_data, $output_ref);
+        my $uncompressed_data = $output_ref->[0];
+        
+        unless ($uncompressed_data eq $data) {
+          return 0;
+        }
+      }
+    }
+    
+    {
+      my $data = "I am a HAL 9000 computer";
+      
+      my $output_ref = [(string)undef];
+      Compress::Raw::Zlib->gzip($data, $output_ref, {Bufsize => 1});
+      my $compressed_data = $output_ref->[0];
+      
+      {
+        # GZIP format
+        unless ($compressed_data->[0] == (byte)0x1f) {
+          return 0;
+        }
+        unless ($compressed_data->[1] == (byte)0x8b) {
+          return 0;
+        }
+        
+        my $output_ref = [(string)undef];
+        Compress::Raw::Zlib->gunzip($compressed_data, $output_ref, {Bufsize => 1});
+        my $uncompressed_data = $output_ref->[0];
+        
+        unless ($uncompressed_data eq $data) {
+          return 0;
+        }
+      }
+    }
+    
+    return 1;
+  }
+  
 }

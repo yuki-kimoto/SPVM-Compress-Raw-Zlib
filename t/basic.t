@@ -38,6 +38,8 @@ ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_AppendOutput);
 
 ok(SPVM::TestCase::Compress::Raw::Zlib->deflate_and_inflate_LimitOutput);
 
+ok(SPVM::TestCase::Compress::Raw::Zlib->gzip_and_gunzip);
+
 # Version check
 {
   my $version_string = SPVM::Fn->get_version_string("Compress::Raw::Zlib");
