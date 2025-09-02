@@ -1,6 +1,8 @@
 0.003 2025-09-02
   [Reauirement Changes]
     * Require SPVM::Resource::Zlib 1.004.
+  [New Features]
+    * Add AppendOutput option to Compress::Raw::Zlib::Deflate#new and Compress::Raw::Zlib::Inflate#new methods.
 0.002 2025-09-01
   [Changes]
     * Fix a lot of bugs. Add the documents. Add the tests.
