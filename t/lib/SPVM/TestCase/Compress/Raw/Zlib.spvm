@@ -40,9 +40,9 @@ class TestCase::Compress::Raw::Zlib {
         return 0;
       }
       
-      $deflate->flush(my $_ = [(string)undef]);
+      $status = $deflate->flush(my $_ = [(string)undef]);
       
-      unless ($status == ZLIB->Z_OK) {
+      unless ($status == ZLIB->Z_STREAM_END) {
         return 0;
       }
       
