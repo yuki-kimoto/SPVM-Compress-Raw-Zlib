@@ -1,4 +1,4 @@
-1.009 2026-06-26
+0.009 2026-06-26
   [Requirement Changes]
     * Require SPVM 0.990191.
     * Require SPVM::Resource::Zlib 1.009.
