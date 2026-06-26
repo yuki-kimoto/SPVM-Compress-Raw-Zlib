@@ -110,8 +110,8 @@ WriteMakefile(
   },
   PREREQ_PM => {
     %configure_requires_and_prereq_pm,
-    'SPVM::Resource::Zlib' => '1.004',
-    'SPVM::Regex' => '0.248',
+    'SPVM::Resource::Zlib' => '1.009',
+    'SPVM::Regex' => '0.261',
   },
 );
 
