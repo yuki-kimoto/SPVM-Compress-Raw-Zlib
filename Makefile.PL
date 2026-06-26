@@ -129,7 +129,6 @@ package MY {
         'Compress::Raw::Zlib::Constant',
         'Compress::Raw::Zlib::Deflate',
         'Compress::Raw::Zlib::Inflate',
-        'Compress::Raw::Zlib::Z_stream',
       ];
       
       $options->{precompile_classes} = [
