@@ -125,10 +125,11 @@ package MY {
       $options->{order_only_dependent_files} = ['pm_to_blib'];
       
       $options->{native_classes} = [
-        'Compress::Raw::Zlib',
+        'Compress::Raw::Zlib::Base',
         'Compress::Raw::Zlib::Constant',
         'Compress::Raw::Zlib::Deflate',
-        'Compress::Raw::Zlib::Inflate'
+        'Compress::Raw::Zlib::Inflate',
+        'Compress::Raw::Zlib::Z_stream',
       ];
       
       $options->{precompile_classes} = [
