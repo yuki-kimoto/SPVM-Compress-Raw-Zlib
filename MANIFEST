@@ -10,6 +10,8 @@
 Changes
 helper/constants.pl
 helper/constants.txt
+lib/SPVM/Compress/Raw/Zlib.build
+lib/SPVM/Compress/Raw/Zlib.c
 lib/SPVM/Compress/Raw/Zlib.pm
 lib/SPVM/Compress/Raw/Zlib.spvm
 lib/SPVM/Compress/Raw/Zlib/Base.build

@@ -35,4 +35,6 @@ class Compress::Raw::Zlib {
     $inflate->inflate($input_copy, $output_ref);
   }
   
+  native static method dummy : void ();
+  
 }
